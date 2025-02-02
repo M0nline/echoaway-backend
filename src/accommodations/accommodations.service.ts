@@ -20,7 +20,16 @@ export class AccommodationsService {
     },
   ];
 
-  getAccommodations(): Accommodation[] {
+  getAllAccommodations(): Accommodation[] {
     return this.accommodations;
+  }
+
+  findOne(id: number) {
+    console.log(`Recherche de l'hébergement avec l'ID :`, id);
+    return (
+      this.accommodations.find((acc) => acc.id === id) || {
+        error: 'Accommodation not found',
+      }
+    );
   }
 }
