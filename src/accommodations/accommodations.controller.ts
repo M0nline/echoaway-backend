@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AccommodationsService } from './accommodations.service';
 import { Accommodation } from './accommodation.entity';
 
@@ -16,5 +16,18 @@ export class AccommodationsController {
   findOne(@Param('id') id: string) {
     // Paramètres sont toujours des strings
     return this.accommodationsService.findOne(Number(id)); // Convertir en nombre
+  }
+
+  @Post()
+  create(
+    @Body()
+    newAccommodation: {
+      name: string;
+      location: string;
+      type: string;
+      connectivity: string;
+    },
+  ) {
+    return this.accommodationsService.create(newAccommodation);
   }
 }
