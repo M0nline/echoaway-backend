@@ -33,4 +33,11 @@ export class AccommodationsService {
 
     return this.accommodationsRepository.save(accommodation);
   }
+
+  async remove(id: number): Promise<void> {
+    const result = await this.accommodationsRepository.delete(id);
+    if (result.affected === 0) {
+      throw new Error(`Accommodation with ID ${id} not found`);
+    }
+  }
 }

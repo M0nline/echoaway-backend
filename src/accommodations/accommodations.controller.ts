@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Delete,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { AccommodationsService } from './accommodations.service';
 import { Accommodation } from './accommodation.entity';
 
@@ -9,7 +18,6 @@ export class AccommodationsController {
   // route pour récupérer tous les hébergements
   @Get()
   async findAll(): Promise<Accommodation[]> {
-    // Ajout du async et du type Promise
     return await this.accommodationsService.getAllAccommodations();
   }
 
@@ -31,5 +39,18 @@ export class AccommodationsController {
     },
   ): Promise<Accommodation> {
     return await this.accommodationsService.create(newAccommodation);
+  }
+
+  // Route pour supprimer un hébergement
+  @Delete(':id')
+  async remove(@Param('id') id: string): Promise<{ message: string }> {
+    try {
+      await this.accommodationsService.remove(Number(id));
+      return { message: `Accommodation with ID ${id} successfully deleted` };
+    } catch (error: any) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      throw new HttpException(errorMessage, HttpStatus.NOT_FOUND);
+    }
   }
 }
