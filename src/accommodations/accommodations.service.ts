@@ -1,53 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { Accommodation } from './accommodation.entity';
-import { ConnectivityLevel } from './accommodation.entity';
+import { Accommodation, ConnectivityLevel } from './accommodation.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AccommodationsService {
-  private accommodations: Accommodation[] = [
-    {
-      id: 1,
-      name: 'EcoLodge Montagne',
-      location: 'Alpes, France',
-      type: 'Lodge',
-      connectivity: 'None',
-    },
-    {
-      id: 2,
-      name: 'Domaine Digital Detox',
-      location: 'Ardèche, France',
-      type: 'Camping',
-      connectivity: 'Low',
-    },
-  ];
+  constructor(
+    @InjectRepository(Accommodation)
+    private readonly accommodationsRepository: Repository<Accommodation>,
+  ) {}
 
-  getAllAccommodations(): Accommodation[] {
-    return this.accommodations;
+  async getAllAccommodations(): Promise<Accommodation[]> {
+    return this.accommodationsRepository.find();
   }
 
-  findOne(id: number) {
+  async findOne(id: number): Promise<Accommodation | null> {
     console.log(`🏨 Recherche de l'hébergement avec l'ID :`, id);
-    return (
-      this.accommodations.find((acc) => acc.id === id) || {
-        error: 'Accommodation not found',
-      }
-    );
+    return this.accommodationsRepository.findOne({ where: { id } });
   }
 
   // génère id et ajoute l'hébergement à la liste + retoune l'hébergement créé
-  create(newAccommodation: {
+  async create(newAccommodation: {
     name: string;
     location: string;
     type: string;
     connectivity: string;
-  }) {
-    const newId = this.accommodations.length + 1;
-    const accommodation: Accommodation = {
-      id: newId,
+  }): Promise<Accommodation> {
+    const accommodation = this.accommodationsRepository.create({
       ...newAccommodation,
-      connectivity: newAccommodation.connectivity as ConnectivityLevel,
-    };
-    this.accommodations.push(accommodation);
-    return accommodation;
+      connectivity: newAccommodation.connectivity as ConnectivityLevel, // Assure la correspondance avec l'Enum
+    });
+
+    return this.accommodationsRepository.save(accommodation);
   }
 }

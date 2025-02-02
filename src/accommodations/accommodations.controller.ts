@@ -8,18 +8,20 @@ export class AccommodationsController {
 
   // route pour récupérer tous les hébergements
   @Get()
-  findAll(): Accommodation[] {
-    return this.accommodationsService.getAllAccommodations();
-  }
-  // Route pour récupérer un hébergement spécifique depuis l'id de l'URL
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    // Paramètres sont toujours des strings
-    return this.accommodationsService.findOne(Number(id)); // Convertir en nombre
+  async findAll(): Promise<Accommodation[]> {
+    // Ajout du async et du type Promise
+    return await this.accommodationsService.getAllAccommodations();
   }
 
+  // Route pour récupérer un hébergement spécifique depuis l'id de l'URL
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Accommodation | null> {
+    return await this.accommodationsService.findOne(Number(id));
+  }
+
+  // Route pour créer un hébergement
   @Post()
-  create(
+  async create(
     @Body()
     newAccommodation: {
       name: string;
@@ -27,7 +29,7 @@ export class AccommodationsController {
       type: string;
       connectivity: string;
     },
-  ) {
-    return this.accommodationsService.create(newAccommodation);
+  ): Promise<Accommodation> {
+    return await this.accommodationsService.create(newAccommodation);
   }
 }
