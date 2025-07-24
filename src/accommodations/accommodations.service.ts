@@ -19,18 +19,28 @@ export class AccommodationsService {
     return this.accommodationsRepository.findOne({ where: { id } });
   }
 
-  // génère id et ajoute l'hébergement à la liste + retoune l'hébergement créé
-  async create(newAccommodation: {
-    name: string;
-    location: string;
-    type: string;
-    connectivity: string;
-  }): Promise<Accommodation> {
+  async create(
+    newAccommodation: Partial<Accommodation>,
+  ): Promise<Accommodation> {
     const accommodation = this.accommodationsRepository.create({
       ...newAccommodation,
-      connectivity: newAccommodation.connectivity as ConnectivityLevel, // Assure la correspondance avec l'Enum
+      connectivity:
+        (newAccommodation.connectivity as ConnectivityLevel) || 'None',
     });
 
+    return this.accommodationsRepository.save(accommodation);
+  }
+
+  async update(
+    id: number,
+    updateAccommodation: Partial<Accommodation>,
+  ): Promise<Accommodation> {
+    const accommodation = await this.findOne(id);
+    if (!accommodation) {
+      throw new Error(`Accommodation with ID ${id} not found`);
+    }
+
+    Object.assign(accommodation, updateAccommodation);
     return this.accommodationsRepository.save(accommodation);
   }
 

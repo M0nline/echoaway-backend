@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Delete,
   HttpException,
   HttpStatus,
@@ -15,33 +16,34 @@ import { Accommodation } from './accommodation.entity';
 export class AccommodationsController {
   constructor(private readonly accommodationsService: AccommodationsService) {}
 
-  // route pour récupérer tous les hébergements
   @Get()
   async findAll(): Promise<Accommodation[]> {
     return await this.accommodationsService.getAllAccommodations();
   }
 
-  // Route pour récupérer un hébergement spécifique depuis l'id de l'URL
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Accommodation | null> {
     return await this.accommodationsService.findOne(Number(id));
   }
 
-  // Route pour créer un hébergement
   @Post()
   async create(
-    @Body()
-    newAccommodation: {
-      name: string;
-      location: string;
-      type: string;
-      connectivity: string;
-    },
+    @Body() newAccommodation: Partial<Accommodation>,
   ): Promise<Accommodation> {
     return await this.accommodationsService.create(newAccommodation);
   }
 
-  // Route pour supprimer un hébergement
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateAccommodation: Partial<Accommodation>,
+  ): Promise<Accommodation> {
+    return await this.accommodationsService.update(
+      Number(id),
+      updateAccommodation,
+    );
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<{ message: string }> {
     try {

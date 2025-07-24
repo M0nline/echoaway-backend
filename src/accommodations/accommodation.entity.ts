@@ -1,20 +1,41 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+import {
+  IsString,
+  IsNotEmpty,
+  IsEnum,
+  IsOptional,
+  IsNumber,
+  Min,
+  Max,
+} from 'class-validator';
 
 export type ConnectivityLevel = 'None' | 'Low' | 'High';
 
-@Entity()
-// TypeORM va créer une table PostgreSQL accommodation
+@Entity('accommodations')
 export class Accommodation {
-  @PrimaryGeneratedColumn() // autoincrément
+  @PrimaryGeneratedColumn()
   id: number;
-  // TypeORM Déclare les colonnes de la table
-  @Column()
+
+  @Column({ length: 255 })
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
-  @Column()
+  @Column({ length: 500 })
+  @IsString()
+  @IsNotEmpty()
   location: string;
 
-  @Column()
+  @Column({ length: 100 })
+  @IsString()
+  @IsNotEmpty()
   type: string;
 
   @Column({
@@ -22,5 +43,30 @@ export class Accommodation {
     enum: ['None', 'Low', 'High'],
     default: 'None',
   })
+  @IsEnum(['None', 'Low', 'High'])
   connectivity: ConnectivityLevel;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  pricePerNight?: number;
+
+  @Column({ type: 'int', nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(20)
+  numberOfRooms?: number;
+
+  @Column({ type: 'text', nullable: true })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
