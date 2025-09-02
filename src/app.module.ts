@@ -1,9 +1,19 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AccommodationsModule } from './accommodations/accommodations.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { FavoritesModule } from './favorites/favorites.module';
+import { AccommodationImagesModule } from './accommodation-images/accommodation-images.module';
+
+// Import explicite de toutes les entités
+import { User } from './users/user.entity';
+import { Accommodation } from './accommodations/accommodation.entity';
+import { Favorite } from './favorites/favorite.entity';
+import { AccommodationImage } from './accommodation-images/accommodation-image.entity';
 
 @Module({
   imports: [
@@ -13,23 +23,44 @@ import { AccommodationsModule } from './accommodations/accommodations.module';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST', 'localhost'),
-        port: configService.get('DB_PORT', 5432),
-        username: configService.get('DB_USER', 'echoaway'),
-        password: configService.get('DB_PASSWORD', 'echoaway'),
-        database: configService.get('DB_NAME', 'echoaway'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV') !== 'production',
-        logging: configService.get('NODE_ENV') === 'development',
-        ssl: configService.get('DB_SSL') === 'true' ? { rejectUnauthorized: false } : false,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const config = {
+          type: 'postgres' as const,
+          host: configService.get('DB_HOST', 'localhost'),
+          port: configService.get('DB_PORT', 5432),
+          username: configService.get('DB_USER', 'echoaway'),
+          password: configService.get('DB_PASSWORD', 'echoaway'),
+          database: configService.get('DB_NAME', 'echoaway'),
+          entities: [User, Accommodation, Favorite, AccommodationImage], // 🔥 Entités sans Review
+          synchronize: true, // Force la synchronisation pour le debug
+          logging: true, // Force le logging pour le debug
+          ssl: configService.get('DB_SSL') === 'true' ? { rejectUnauthorized: false } : false,
+        };
+        
+        console.log('🔧 TypeORM Config:', {
+          host: config.host,
+          database: config.database,
+          synchronize: config.synchronize,
+          logging: config.logging,
+          entities: config.entities.map(e => e.name)
+        });
+        
+        return config;
+      },
       inject: [ConfigService],
     }),
     AccommodationsModule,
+    AuthModule,
+    UsersModule,
+    FavoritesModule,
+    AccommodationImagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  onModuleInit() {
+    console.log('🚀 AppModule initialized successfully!');
+    console.log('📦 Modules loaded:', this.constructor.name);
+  }
+}
