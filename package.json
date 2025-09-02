@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Backend API for EchoAway application - RNCP Project",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "build": "nest build",
     "start": "nest start",

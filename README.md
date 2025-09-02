@@ -1,20 +1,106 @@
 # EchoAway Backend
 
-API REST NestJS pour l'application EchoAway - Projet RNCP
+NestJS REST API for EchoAway application
 
-## 🏗️ Architecture du projet
+## 🏗️ Project Architecture
 
-Ce projet fait partie d'une architecture **multi-repositories** avec :
-- **Backend** : API NestJS avec TypeORM et PostgreSQL (ce repository)
-- **Frontend** : Application Vue3/Quasar avec Vite (repository séparé)
-- **Déploiement** : Railway (backend) + Vercel (frontend)
+This project is part of a **multi-repositories** architecture with:
+- **Backend** : NestJS API with TypeORM and PostgreSQL (this repository)
+- **Frontend** : Vue3/Quasar application with Vite (separate repository)
+- **Deployment** : Railway (backend) + Vercel (frontend)
 
-## Stack Technique
+## Technical Stack Backend
 
-- **NestJS** framework Node.js
-- **TypeORM** pour l'ORM
-- **PostgreSQL** base de données
-- **TypeScript** pour le typage
+- **NestJS** Node.js framework
+- **TypeORM** for ORM
+- **PostgreSQL** database
+- **TypeScript** for typing
+
+## 🚀 Complete Application Launch
+
+**This directory contains the main `docker-compose.yml` for launching the backend and database locally.**
+
+*Note: The Docker project name will be `echoaway-backend` (based on this folder name).*
+
+### Prerequisites
+- Docker and Docker Compose installed
+- Ports 3001 (backend) and 5432 (database) available
+- Node.js 18+ (recommended: use NVM for version management)
+- Git for cloning repositories
+
+### Node.js Version Management (NVM)
+```bash
+# Install NVM
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+# Use the project's Node.js version (automatically detected)
+nvm install
+nvm use
+```
+
+### Quick Start
+```bash
+# 1. Clone the backend repository (this repository)
+git clone <url-echoaway-backend>
+cd echoaway-backend
+
+# 2. Clone the frontend repository in the same parent folder
+git clone <url-echoaway-frontend> ../echoaway-frontend
+
+# 3. Launch the backend and database
+docker-compose up -d
+
+# 4. Launch the frontend in development mode
+cd ../echoaway-frontend
+npm install
+npm run dev
+
+# The application will be accessible on:
+# - Frontend: http://localhost:3000 (npm run dev)
+# - Backend API: http://localhost:3001
+# - Database: localhost:5432
+```
+
+### Folder Structure
+```
+echoaway-app/
+├── echoaway-backend/          # This repository (contains docker-compose.yml)
+│   ├── docker-compose.yml     # Backend + DB
+│   ├── Dockerfile
+│   └── src/
+└── echoaway-frontend/         # Frontend repository
+    ├── package.json
+    └── src/
+```
+
+### Available Services
+- **Backend** : Port 3001 (this repository, Docker)
+- **Frontend** : Port 3000 (separate repository, npm run dev)
+- **PostgreSQL** : Port 5432 (Docker)
+
+### Useful Docker Commands
+```bash
+# View logs
+docker-compose logs -f backend
+
+# Restart backend
+docker-compose restart backend
+
+# Stop all services
+docker-compose down
+
+# View status
+docker-compose ps
+```
+
+### Useful Frontend Commands
+```bash
+# Start frontend
+cd ../echoaway-frontend
+npm run dev
+
+# Install dependencies
+npm install
 
 ## Installation
 
@@ -22,173 +108,64 @@ Ce projet fait partie d'une architecture **multi-repositories** avec :
 npm install
 ```
 
-## Développement
+## Development
 
 ```bash
-# Mode développement avec hot reload
+# Development mode with hot reload
 npm run dev
-
-# Mode production
-npm run start:prod
 ```
 
-## Build
+## Production Build
 
 ```bash
 npm run build
 ```
 
-## Structure du projet
+## Production Preview
 
-```
-echoaway-backend/
-├── src/
-│   ├── accommodations/           # Module hébergements
-│   ├── auth/                     # Module d'authentification
-│   ├── users/                    # Module utilisateurs
-│   ├── favorites/                # Module favoris
-│   ├── accommodation-images/      # Module images d'hébergement
-│   ├── app.controller.ts         # Contrôleur principal
-│   ├── app.service.ts            # Service principal
-│   ├── app.module.ts             # Module racine
-│   └── main.ts                   # Point d'entrée
-├── Dockerfile
-├── docker-compose.yml            # Développement local
-├── env.example
-└── package.json
+```bash
+npm run preview
 ```
 
-## Variables d'environnement
+## Environment Variables
 
-1. Copier le fichier d'exemple :
+1. Copy the example file:
 ```bash
 cp env.example .env
 ```
 
-2. Modifier le fichier `.env` avec vos valeurs :
-```env
-NODE_ENV=development
-PORT=3001
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=echoaway
-DB_PASSWORD=echoaway_password
-DB_NAME=echoaway
-DB_SSL=false
-JWT_SECRET=your-super-secret-key
-JWT_EXPIRES_IN=7d
-FRONTEND_URL=http://localhost:3000
-```
+2. Rename and modify the `.env` file with your values
 
-## 🚀 Lancement de l'application complète
+## 🚀 Production Deployment
 
-**Ce répertoire contient le `docker-compose.yml` principal pour lancer l'application complète en local.**
-
-### Prérequis
-- Docker et Docker Compose installés
-- Ports 3000 (frontend) et 3001 (backend) disponibles
-- Git pour cloner les repositories
-
-### Démarrage rapide
-```bash
-# 1. Cloner le repository backend (ce repository)
-git clone <url-echoaway-backend>
-cd echoaway-backend
-
-# 2. Cloner le repository frontend dans le même dossier parent
-git clone <url-echoaway-frontend> ../echoaway-frontend
-
-# 3. Lancer l'application complète
-docker-compose up -d
-
-# L'application sera accessible sur :
-# - Frontend : http://localhost:3000
-# - Backend API : http://localhost:3001
-# - Base de données : localhost:5432
-```
-
-### Structure des dossiers
-```
-echoaway-app/
-├── echoaway-backend/          # Ce repository (contient docker-compose.yml)
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   └── src/
-└── echoaway-frontend/         # Repository frontend
-    ├── Dockerfile
-    └── src/
-```
-
-### Services disponibles
-- **Backend** : Port 3001 (ce repository)
-- **Frontend** : Port 3000 (repository séparé)
-- **PostgreSQL** : Port 5432
-
-### Commandes Docker utiles
-```bash
-# Voir les logs
-docker-compose logs -f backend
-
-# Redémarrer le backend
-docker-compose restart backend
-
-# Arrêter tous les services
-docker-compose down
-
-# Voir le statut
-docker-compose ps
-```
-
-## 🚀 Déploiement en production
-
-### Plateformes utilisées
-- **Backend** : Railway (déploiement automatique depuis Git)
-- **Frontend** : Vercel (déploiement automatique depuis Git)
-- **Base de données** : Railway PostgreSQL
-
-### Configuration Railway
-1. Connecter le repository GitHub à Railway
-2. Configurer les variables d'environnement
-3. Déploiement automatique à chaque push
+### Platforms Used
+- **Backend** : Railway (automatic deployment from Git)
+- **Frontend** : Vercel (automatic deployment from Git)
+- **Database** : Railway PostgreSQL
 
 ## Docker
 
 ```bash
-# Build de l'image
+# Build image
 docker build -t echoaway-backend .
 
-# Exécution
+# Run
 docker run -p 3001:3001 echoaway-backend
 ```
 
-## Scripts disponibles
+## Available Scripts
 
-- `npm run dev` - Mode développement avec hot reload
-- `npm run build` - Build de production
-- `npm run start` - Démarrage en mode production
-- `npm run start:prod` - Démarrage optimisé pour production
-- `npm run format` - Formatage du code avec Prettier
+- `npm run dev` - Development mode with hot reload
+- `npm run build` - Production build
+- `npm run start` - Start in production mode
+- `npm run start:prod` - Optimized production start
+- `npm run format` - Code formatting with Prettier
 
 ## Architecture
 
-- **Modules** : Architecture modulaire NestJS
-- **Entités** : Modèles TypeORM avec relations
-- **Services** : Logique métier centralisée
-- **Controllers** : Gestion des requêtes HTTP
-- **Guards** : Protection des routes par authentification
-- **Decorators** : Extraction des informations utilisateur
-
-## 🔗 Liens utiles
-
-- **Repository Frontend** : [echoaway-frontend](<url-frontend>)
-- **Documentation NestJS** : https://nestjs.com/
-- **Documentation TypeORM** : https://typeorm.io/
-- **Railway** : https://railway.app/
-- **Vercel** : https://vercel.com/
-
-## 📚 Documentation complète
-
-Pour une vue d'ensemble complète du projet, consultez la documentation de chaque composant :
-- **Backend** : Ce README
-- **Frontend** : README du repository frontend
-- **Déploiement** : Configuration Railway et Vercel
+- **Modules** : NestJS modular architecture
+- **Entities** : TypeORM models with relationships
+- **Services** : Centralized business logic
+- **Controllers** : HTTP request handling
+- **Guards** : Route protection by authentication
+- **Decorators** : User information extraction

@@ -62,33 +62,6 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  frontend:
-    build: 
-      context: ../echoaway-frontend
-    container_name: echoaway_frontend
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      - VITE_API_URL=http://localhost:3001
-    volumes:
-      - ../echoaway-frontend/src:/app/src:ro
-      - ../echoaway-frontend/public:/app/public:ro
-      - ../echoaway-frontend/index.html:/app/index.html:ro
-      - ../echoaway-frontend/vite.config.ts:/app/vite.config.ts:ro
-      - ../echoaway-frontend/tsconfig.json:/app/tsconfig.json:ro
-      - ../echoaway-frontend/package.json:/app/package.json:ro
-    depends_on:
-      backend:
-        condition: service_healthy
-    networks:
-      - echoaway_network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
 volumes:
   pg_data:
     driver: local
