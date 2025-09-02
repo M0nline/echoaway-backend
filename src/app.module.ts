@@ -31,9 +31,10 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
           username: configService.get('DB_USER', 'echoaway'),
           password: configService.get('DB_PASSWORD', 'echoaway'),
           database: configService.get('DB_NAME', 'echoaway'),
-          entities: [User, Accommodation, Favorite, AccommodationImage], // 🔥 Entités sans Review
-          synchronize: true, // Force la synchronisation pour le debug
-          logging: true, // Force le logging pour le debug
+          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          synchronize: false, // Désactivé pour utiliser les migrations
+          logging: true,
+          migrations: [__dirname + '/migrations/*{.ts,.js}']
           ssl: configService.get('DB_SSL') === 'true' ? { rejectUnauthorized: false } : false,
         };
         

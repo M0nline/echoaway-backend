@@ -169,3 +169,36 @@ docker run -p 3001:3001 echoaway-backend
 - **Controllers** : HTTP request handling
 - **Guards** : Route protection by authentication
 - **Decorators** : User information extraction
+
+## 🗄️ Database Migrations
+
+### Commandes principales
+```bash
+# Générer une migration
+npm run migration:generate -- -n NomDeLaMigration
+
+# Exécuter les migrations
+npm run migration:run
+
+# Annuler la dernière migration
+npm run migration:revert
+
+# Voir le statut
+npm run migration:show
+```
+
+### Conventions
+- **Format** : `Timestamp-NomDescriptif.ts`
+- **Exemple** : `1703123456789-UpdateAccommodations.ts`
+- **Verbes** : Create, Add, Update, Remove, Drop
+
+### Configuration
+```env
+# Développement (synchronisation auto)
+NODE_ENV=development
+DB_SYNC=true
+
+# Production (migrations manuelles)
+NODE_ENV=production
+DB_SYNC=false
+```
