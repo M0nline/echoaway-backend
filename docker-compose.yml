@@ -1,0 +1,101 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: echoaway_db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: echoaway
+      POSTGRES_PASSWORD: echoaway
+      POSTGRES_DB: echoaway
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - echoaway_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U echoaway -d echoaway"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  backend:
+    build: 
+      context: .
+      target: production
+    container_name: echoaway_backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=echoaway
+      - DB_PASSWORD=echoaway
+      - DB_NAME=echoaway
+      - DB_SSL=false
+      - FRONTEND_URL=http://localhost:3000
+      - PORT=3001
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - echoaway_network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/status', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    build: 
+      context: ../echoaway-frontend
+    container_name: echoaway_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:3001
+    volumes:
+      - ../echoaway-frontend/src:/app/src:ro
+      - ../echoaway-frontend/public:/app/public:ro
+      - ../echoaway-frontend/index.html:/app/index.html:ro
+      - ../echoaway-frontend/vite.config.ts:/app/vite.config.ts:ro
+      - ../echoaway-frontend/tsconfig.json:/app/tsconfig.json:ro
+      - ../echoaway-frontend/package.json:/app/package.json:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - echoaway_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  pg_data:
+    driver: local
+
+networks:
+  echoaway_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
