@@ -26,11 +26,11 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
       useFactory: (configService: ConfigService) => {
         const config = {
           type: 'postgres' as const,
-          host: configService.get('DB_HOST', 'localhost'),
-          port: configService.get('DB_PORT', 5432),
-          username: configService.get('DB_USER', 'echoaway'),
-          password: configService.get('DB_PASSWORD', 'echoaway'),
-          database: configService.get('DB_NAME', 'echoaway'),
+          host: configService.get('DB_HOST'),
+          port: configService.get('DB_PORT'),
+          username: configService.get('DB_USER'),
+          password: configService.get('DB_PASSWORD'),
+          database: configService.get('DB_NAME'),
           entities: [User, Accommodation, Favorite, AccommodationImage],
           synchronize: true, // ✅ En dev, TypeORM crée tout automatiquement
           logging: true,
