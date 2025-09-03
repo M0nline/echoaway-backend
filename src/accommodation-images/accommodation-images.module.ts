@@ -4,6 +4,5 @@ import { AccommodationImage } from './accommodation-image.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([AccommodationImage])],
-  exports: [TypeOrmModule],
 })
 export class AccommodationImagesModule {}

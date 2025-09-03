@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Accommodation, ConnectivityLevel } from './accommodation.entity';
+import { Accommodation, ConnectivityType, AccommodationType } from './accommodation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -25,7 +25,7 @@ export class AccommodationsService {
     const accommodation = this.accommodationsRepository.create({
       ...newAccommodation,
       connectivity:
-        (newAccommodation.connectivity as ConnectivityLevel) || 'None',
+        (newAccommodation.connectivity as ConnectivityType) || ConnectivityType.ZONE_BLANCHE,
     });
 
     return this.accommodationsRepository.save(accommodation);

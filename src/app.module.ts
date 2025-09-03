@@ -31,10 +31,10 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
           username: configService.get('DB_USER', 'echoaway'),
           password: configService.get('DB_PASSWORD', 'echoaway'),
           database: configService.get('DB_NAME', 'echoaway'),
-          entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: false, // Désactivé pour utiliser les migrations
+          entities: [User, Accommodation, Favorite, AccommodationImage],
+          synchronize: true, // ✅ En dev, TypeORM crée tout automatiquement
           logging: true,
-          migrations: [__dirname + '/migrations/*{.ts,.js}']
+          // migrations: [__dirname + '/migrations/*{.ts,.js}'], // ❌ Pas besoin en dev
           ssl: configService.get('DB_SSL') === 'true' ? { rejectUnauthorized: false } : false,
         };
         
