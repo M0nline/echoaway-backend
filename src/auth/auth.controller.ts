@@ -39,7 +39,7 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refresh(@Body() body: { refreshToken: string }) {
+  async refresh(@Body() _body: { refreshToken: string }) {
     return { message: 'Refresh endpoint working!' };
   }
 

@@ -42,7 +42,7 @@ export class AuthService {
     const token = this.generateToken(savedUser);
 
     // Retourner l'utilisateur sans le mot de passe
-    const { password, ...userWithoutPassword } = savedUser;
+    const { password: _password, ...userWithoutPassword } = savedUser;
     return { user: userWithoutPassword, token };
   }
 
@@ -66,7 +66,7 @@ export class AuthService {
     const token = this.generateToken(user);
 
     // Retourner l'utilisateur sans le mot de passe
-    const { password, ...userWithoutPassword } = user;
+    const { password: _password, ...userWithoutPassword } = user;
     return { user: userWithoutPassword, token };
   }
 
