@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Accommodation, ConnectivityType } from './accommodation.entity';
+import { Accommodation, ConnectivityType, AccommodationType } from './accommodation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -20,27 +20,36 @@ export class AccommodationsService {
   }
 
   async create(
-    newAccommodation: Partial<Accommodation>,
+    newAccommodation: any,
   ): Promise<Accommodation> {
-    const accommodation = this.accommodationsRepository.create({
+    // Convertir les strings en enums
+    const accommodationData = {
       ...newAccommodation,
-      connectivity:
-        (newAccommodation.connectivity as ConnectivityType) || ConnectivityType.ZONE_BLANCHE,
-    });
+      type: newAccommodation.type as AccommodationType,
+      connectivity: newAccommodation.connectivity as ConnectivityType,
+    };
 
+    const accommodation = this.accommodationsRepository.create(accommodationData);
     return this.accommodationsRepository.save(accommodation);
   }
 
   async update(
     id: number,
-    updateAccommodation: Partial<Accommodation>,
+    updateAccommodation: any,
   ): Promise<Accommodation> {
     const accommodation = await this.findOne(id);
     if (!accommodation) {
       throw new Error(`Accommodation with ID ${id} not found`);
     }
 
-    Object.assign(accommodation, updateAccommodation);
+    // Convertir les strings en enums si nécessaire
+    const updateData = {
+      ...updateAccommodation,
+      type: updateAccommodation.type ? updateAccommodation.type as AccommodationType : accommodation.type,
+      connectivity: updateAccommodation.connectivity ? updateAccommodation.connectivity as ConnectivityType : accommodation.connectivity,
+    };
+
+    Object.assign(accommodation, updateData);
     return this.accommodationsRepository.save(accommodation);
   }
 
