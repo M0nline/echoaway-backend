@@ -129,19 +129,102 @@ npm run preview
 
 ## Environment Variables
 
+### Development
+
 1. Copy the example file:
 ```bash
 cp env.example .env
 ```
 
-2. Rename and modify the `.env` file with your values
+2. Modify the `.env` file with your values:
+
+```env
+NODE_ENV=development
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=echoaway
+DB_PASSWORD=echoaway
+DB_NAME=echoaway
+DB_SSL=false
+JWT_SECRET=your-development-secret
+JWT_EXPIRES_IN=7d
+```
+
+### Production (Railway)
+
+Les variables d'environnement sont configurées dans Railway :
+
+```env
+NODE_ENV=production
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+JWT_SECRET=your-super-secret-production-key
+JWT_EXPIRES_IN=7d
+FRONTEND_URL=https://echoaway.vercel.app
+```
+
+**Note importante** : Railway utilise une seule variable `DATABASE_URL` qui contient toutes les informations de connexion PostgreSQL.
 
 ## 🚀 Production Deployment
+
+### URLs de Production
+
+- **Backend** : `https://echoaway-backend-production.up.railway.app`
+- **Frontend** : `https://echoaway.vercel.app`
 
 ### Platforms Used
 - **Backend** : Railway (automatic deployment from Git)
 - **Frontend** : Vercel (automatic deployment from Git)
 - **Database** : Railway PostgreSQL
+
+### CI/CD Pipeline
+
+Chaque push sur la branche `main` déclenche automatiquement :
+
+1. **Linting** : Vérification du code avec ESLint
+2. **Build** : Compilation de l'application
+3. **Deploy** : Déploiement automatique sur Railway
+
+### Workflow de Développement
+
+#### Branches principales
+- **`main`** : Branche de production (déploiement automatique)
+- **`dev`** : Branche de développement (intégration)
+
+#### Branches de travail
+- **`feature/nom-feature`** : Nouvelles fonctionnalités
+- **`fix/nom-correction`** : Corrections de bugs
+- **`hotfix/nom-urgence`** : Corrections urgentes en production
+
+#### Processus de développement
+1. **Nouvelle fonctionnalité** :
+   ```bash
+   git checkout -b feature/nom-feature
+   # Développement...
+   git push origin feature/nom-feature
+   # Pull Request vers dev
+   ```
+
+2. **Correction de bug** :
+   ```bash
+   git checkout -b fix/nom-correction
+   # Correction...
+   git push origin fix/nom-correction
+   # Pull Request vers dev
+   ```
+
+3. **Correction urgente** :
+   ```bash
+   git checkout -b hotfix/nom-urgence
+   # Correction...
+   git push origin hotfix/nom-urgence
+   # Pull Request vers main (puis merge vers dev)
+   ```
+
+4. **Intégration** :
+   - Merge `feature/*` ou `fix/*` → `dev`
+   - Tests sur `dev`
+   - Merge `dev` → `main`
+   - Déploiement automatique
 
 ## Docker
 
@@ -159,7 +242,10 @@ docker run -p 3001:3001 echoaway-backend
 - `npm run build` - Production build
 - `npm run start` - Start in production mode
 - `npm run start:prod` - Optimized production start
+- `npm run lint` - Code linting with ESLint
+- `npm run lint:check` - Check linting without fixing
 - `npm run format` - Code formatting with Prettier
+- `npm run format:check` - Check code formatting
 
 ## Architecture
 
@@ -202,3 +288,12 @@ DB_SYNC=true
 NODE_ENV=production
 DB_SYNC=false
 ```
+
+## Health Check
+
+L'application expose un endpoint de health check :
+
+- **URL** : `GET /status`
+- **Réponse** : `{ "status": "API is running 🚀" }`
+
+Cet endpoint est utilisé par Railway pour vérifier que l'application fonctionne correctement.
