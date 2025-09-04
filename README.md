@@ -133,6 +133,11 @@ cp env.example .env
 
 ## 🚀 Production Deployment
 
+### URLs de Production
+
+- **Backend** : `https://echoaway-backend-production.up.railway.app`
+- **Frontend** : `https://echoaway.vercel.app`
+
 ### Platforms Used
 - **Backend** : Railway (automatic deployment from Git)
 - **Frontend** : Vercel (automatic deployment from Git)
