@@ -32,7 +32,7 @@ export class AuthController {
   async getProfile(@CurrentUser() user: User) {
     return this.authService.validateUser({
       sub: user.id,
-      login: user.login,
+      email: user.email,
       role: user.role
     });
   }

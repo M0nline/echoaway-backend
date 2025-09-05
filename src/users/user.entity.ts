@@ -14,8 +14,8 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true, length: 50 })
-  login: string;
+  @Column({ unique: true, length: 255 })
+  email: string;
 
   @Column({ select: false, length: 255 })
   password: string;

@@ -8,7 +8,7 @@ import { LoginDto } from './dto/login.dto';
 
 export interface JwtPayload {
   sub: number;
-  login: string;
+  email: string;
   role: string;
 }
 
@@ -23,11 +23,11 @@ export class AuthService {
   async register(registerDto: RegisterDto): Promise<{ user: Partial<User>; token: string }> {
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await this.userRepository.findOne({
-      where: { login: registerDto.login },
+      where: { email: registerDto.email },
     });
 
     if (existingUser) {
-      throw new ConflictException('Un utilisateur avec ce login existe déjà');
+      throw new ConflictException('Un utilisateur avec cet email existe déjà');
     }
 
     // Créer le nouvel utilisateur
@@ -47,19 +47,19 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto): Promise<{ user: Partial<User>; token: string }> {
-    // Trouver l'utilisateur par login
+    // Trouver l'utilisateur par email
     const user = await this.userRepository.findOne({
-      where: { login: loginDto.login },
+      where: { email: loginDto.email },
     });
 
     if (!user) {
-      throw new UnauthorizedException('Login ou mot de passe incorrect');
+      throw new UnauthorizedException('Email ou mot de passe incorrect');
     }
 
     // Valider le mot de passe (comparaison directe pour l'instant)
     const isPasswordValid = loginDto.password === user.password;
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Login ou mot de passe incorrect');
+      throw new UnauthorizedException('Email ou mot de passe incorrect');
     }
 
     // Générer le token JWT
@@ -85,7 +85,7 @@ export class AuthService {
   private generateToken(user: User): string {
     const payload: JwtPayload = {
       sub: user.id,
-      login: user.login,
+      email: user.email,
       role: user.role,
     };
 

@@ -30,7 +30,8 @@ export class AccommodationsService {
     };
 
     const accommodation = this.accommodationsRepository.create(accommodationData);
-    return this.accommodationsRepository.save(accommodation);
+    const result = await this.accommodationsRepository.save(accommodation);
+    return Array.isArray(result) ? result[0] : result;
   }
 
   async update(

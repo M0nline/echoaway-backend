@@ -1,11 +1,11 @@
-import { IsString, MinLength, MaxLength, IsOptional, IsEnum } from 'class-validator';
+import { IsString, MinLength, MaxLength, IsOptional, IsEnum, IsEmail } from 'class-validator';
 import { UserRole } from '../../users/user.entity';
 
 export class RegisterDto {
-  @IsString({ message: 'Le login doit être une chaîne de caractères' })
-  @MinLength(3, { message: 'Le login doit contenir au moins 3 caractères' })
-  @MaxLength(50, { message: 'Le login ne peut pas dépasser 50 caractères' })
-  login: string;
+  @IsString({ message: 'L\'email doit être une chaîne de caractères' })
+  @IsEmail({}, { message: 'L\'email doit être valide' })
+  @MaxLength(255, { message: 'L\'email ne peut pas dépasser 255 caractères' })
+  email: string;
 
   @IsString({ message: 'Le prénom doit être une chaîne de caractères' })
   @MinLength(2, { message: 'Le prénom doit contenir au moins 2 caractères' })
