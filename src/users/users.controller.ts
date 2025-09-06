@@ -67,7 +67,11 @@ export class UsersController {
 
   @Get('profile')
   async getProfile(@CurrentUser() user: User): Promise<User> {
-    return this.usersService.findOne(user.id);
+    const userProfile = await this.usersService.findOne(user.id);
+    if (!userProfile) {
+      throw new Error('Utilisateur non trouvé');
+    }
+    return userProfile;
   }
 
   @Put('profile')

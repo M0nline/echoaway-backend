@@ -5,6 +5,12 @@ import { User } from '../users/user.entity';
 import * as bcrypt from 'bcrypt';
 
 async function seed() {
+  // Protection contre l'exécution en production
+  if (process.env.NODE_ENV === 'production') {
+    console.log('❌ Seed script disabled in production environment');
+    process.exit(0);
+  }
+
   console.log('🌱 Starting database seeding...');
   
   const app = await NestFactory.createApplicationContext(AppModule);

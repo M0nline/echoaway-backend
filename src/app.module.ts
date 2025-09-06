@@ -26,9 +26,13 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
       useFactory: (configService: ConfigService) => {
         const databaseUrl = configService.get('DATABASE_URL');
         
+        // Détecter si on est dans un conteneur Docker ou en local
+        const isDocker = process.env.DOCKER_ENV === 'true' || process.env.NODE_ENV === 'production';
+        const dbHost = isDocker ? 'db' : 'localhost';
+        
         const config = {
           type: 'postgres' as const,
-          host: configService.get<string>('DB_HOST') || 'localhost',
+          host: configService.get<string>('DB_HOST') || dbHost,
           port: parseInt(configService.get<string>('DB_PORT') || '5432'),
           username: configService.get<string>('DB_USER') || 'postgres',
           password: configService.get<string>('DB_PASSWORD') || 'password',
