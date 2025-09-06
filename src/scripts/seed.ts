@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
+import * as bcrypt from 'bcrypt';
 
 async function seed() {
   console.log('🌱 Starting database seeding...');
@@ -19,11 +20,12 @@ async function seed() {
     }
 
     // Créer un utilisateur de test simple (ID 1)
+    const hashedPassword = await bcrypt.hash('test123', 10);
     const testUser = userRepository.create({
       id: 1,
       email: 'test@echoaway.com',
-      password: 'test123', // En production, il faudra hasher
-      login: 'test',
+      password: hashedPassword,
+      firstname: 'Test',
       name: 'Utilisateur Test',
       role: 'VISITOR',
       avatar: 'https://via.placeholder.com/150/96CEB4/FFFFFF?text=T'
