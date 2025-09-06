@@ -24,26 +24,20 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const databaseUrl = configService.get('DATABASE_URL');
+        const isProduction = configService.get('NODE_ENV') === 'production';
         
-        const config = {
+        return {
           type: 'postgres' as const,
-          url: databaseUrl,
+          host: configService.get('DB_HOST'),
+          port: parseInt(configService.get('DB_PORT')) || 5432,
+          username: configService.get('DB_USER'),
+          password: configService.get('DB_PASSWORD'),
+          database: configService.get('DB_NAME'),
           entities: [User, Accommodation, Favorite, AccommodationImage],
-          synchronize: true, // ✅ En dev, TypeORM crée tout automatiquement
-          logging: true,
-          // migrations: [__dirname + '/migrations/*{.ts,.js}'], // ❌ Pas besoin en dev
-          ssl: { rejectUnauthorized: false }, // Railway nécessite SSL
+          synchronize: !isProduction, // ❌ Jamais en production
+          logging: !isProduction,
+          ssl: isProduction ? { rejectUnauthorized: false } : false,
         };
-        
-        console.log('🔧 TypeORM Config:', {
-          url: databaseUrl ? 'configured' : 'missing',
-          synchronize: config.synchronize,
-          logging: config.logging,
-          entities: config.entities.map(e => e.name)
-        });
-        
-        return config;
       },
       inject: [ConfigService],
     }),

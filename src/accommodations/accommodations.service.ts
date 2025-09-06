@@ -30,7 +30,8 @@ export class AccommodationsService {
     };
 
     const accommodation = this.accommodationsRepository.create(accommodationData);
-    return this.accommodationsRepository.save(accommodation);
+    const savedAccommodation = await this.accommodationsRepository.save(accommodation);
+    return Array.isArray(savedAccommodation) ? savedAccommodation[0] : savedAccommodation;
   }
 
   async update(

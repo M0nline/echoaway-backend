@@ -42,7 +42,6 @@ services:
       - DB_USER=echoaway
       - DB_PASSWORD=echoaway
       - DB_NAME=echoaway
-      - DB_SSL=false
       - FRONTEND_URL=http://localhost:3000
       - PORT=3001
     depends_on:
