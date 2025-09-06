@@ -39,11 +39,14 @@ export class AccommodationsController {
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createAccommodationDto: any,
-    @CurrentUser() _user: User
+    @CurrentUser() user: User
   ): Promise<Accommodation> {
-    const newAccommodation = await this.accommodationsService.create(createAccommodationDto);
-    // Note: hostId sera géré dans le service ou l'entité
-    return newAccommodation;
+    // Ajouter automatiquement le hostId depuis l'utilisateur connecté
+    const accommodationData = {
+      ...createAccommodationDto,
+      hostId: user.id,
+    };
+    return this.accommodationsService.create(accommodationData);
   }
 
   @Put(':id')
