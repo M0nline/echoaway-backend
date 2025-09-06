@@ -26,13 +26,13 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
       useFactory: (configService: ConfigService) => {
         const databaseUrl = configService.get('DATABASE_URL');
         
-        // Détecter si on est dans un conteneur Docker ou en local
-        const isDocker = process.env.DOCKER_ENV === 'true' || process.env.NODE_ENV === 'production';
-        const dbHost = isDocker ? 'db' : 'localhost';
+        // Détecter l'environnement
+        const isProduction = process.env.NODE_ENV === 'production';
+        const isLocalDev = process.env.NODE_ENV === 'development';
         
         const config = {
           type: 'postgres' as const,
-          host: configService.get<string>('DB_HOST') || dbHost,
+          host: configService.get<string>('DB_HOST') || 'db',
           port: parseInt(configService.get<string>('DB_PORT') || '5432'),
           username: configService.get<string>('DB_USER') || 'postgres',
           password: configService.get<string>('DB_PASSWORD') || 'password',
@@ -41,7 +41,7 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
           synchronize: true, // ✅ En dev, TypeORM crée tout automatiquement
           logging: true,
           // migrations: [__dirname + '/migrations/*{.ts,.js}'], // ❌ Pas besoin en dev
-          ssl: { rejectUnauthorized: false }, // Railway nécessite SSL
+          ssl: isProduction ? { rejectUnauthorized: false } : false, // SSL seulement en production
         };
         
         console.log('🔧 TypeORM Config:', {
