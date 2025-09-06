@@ -48,4 +48,21 @@ export class User {
 
   @OneToMany(() => Favorite, (favorite) => favorite.user)
   favorites: Favorite[];
+
+  // Méthodes utilitaires pour les rôles
+  isAdmin(): boolean {
+    return this.role === UserRole.ADMIN;
+  }
+
+  isHost(): boolean {
+    return this.role === UserRole.HOST || this.role === UserRole.ADMIN;
+  }
+
+  isGuest(): boolean {
+    return this.role === UserRole.GUEST;
+  }
+
+  isVisitor(): boolean {
+    return this.role === UserRole.VISITOR;
+  }
 }

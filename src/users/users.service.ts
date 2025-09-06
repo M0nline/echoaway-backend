@@ -26,7 +26,7 @@ export class UsersService {
   async create(userData: {
     email: string;
     password: string;
-    login: string;
+    firstname: string;
     name: string;
     role?: UserRole;
     avatar?: string;
@@ -54,5 +54,9 @@ export class UsersService {
 
   async validatePassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(plainPassword, hashedPassword);
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 10);
   }
 }
