@@ -1,24 +1,21 @@
-import { IsString, IsNumber, IsOptional, IsEnum, IsUrl, IsPhoneNumber, Min, Max, IsIn } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsEnum, IsUrl, IsPhoneNumber, Min, Max, IsIn, MaxLength } from 'class-validator';
 import { AccommodationType, ConnectivityType } from '../accommodation.entity';
 
 export class CreateAccommodationDto {
   @IsString()
-  @Max(100)
+  @MaxLength(100)
   title: string;
 
-  @IsNumber()
-  hostId: number;
-
   @IsString()
-  @Max(200)
+  @MaxLength(200)
   address: string;
 
   @IsString()
-  @Max(10)
+  @MaxLength(10)
   postalCode: string;
 
   @IsString()
-  @Max(100)
+  @MaxLength(100)
   city: string;
 
   @IsString()
