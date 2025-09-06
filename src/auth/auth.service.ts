@@ -83,14 +83,18 @@ export class AuthService {
   }
 
   async validateUser(payload: JwtPayload): Promise<User> {
+    console.log('🔍 Validation du token JWT avec payload:', payload);
+    
     const user = await this.userRepository.findOne({
       where: { id: payload.sub },
     });
 
     if (!user) {
+      console.log('❌ Utilisateur non trouvé pour l\'ID:', payload.sub);
       throw new UnauthorizedException('Utilisateur non trouvé');
     }
 
+    console.log('✅ Utilisateur validé:', { id: user.id, email: user.email, role: user.role });
     return user;
   }
 

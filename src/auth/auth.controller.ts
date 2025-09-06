@@ -32,11 +32,12 @@ export class AuthController {
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async getProfile(@CurrentUser() user: User) {
-    return this.authService.validateUser({
+    const validatedUser = await this.authService.validateUser({
       sub: user.id,
       email: user.email,
       role: user.role
     });
+    return { user: validatedUser };
   }
 
   @Post('refresh')
