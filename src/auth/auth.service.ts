@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -44,7 +44,7 @@ export class AuthService {
     const user = this.userRepository.create({
       ...registerDto,
       password: hashedPassword,
-      role: registerDto.role || UserRole.VISITOR,
+      role: registerDto.role || UserRole.GUEST, // Par défaut, les nouveaux utilisateurs sont des voyageurs
     });
 
     const savedUser = await this.userRepository.save(user);
@@ -58,9 +58,10 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto): Promise<{ user: Partial<User>; token: string }> {
-    // Trouver l'utilisateur par email
+    // Trouver l'utilisateur par email (avec le mot de passe pour la validation)
     const user = await this.userRepository.findOne({
       where: { email: loginDto.email },
+      select: ['id', 'email', 'password', 'firstname', 'name', 'avatar', 'role', 'createdAt', 'updatedAt'],
     });
 
     if (!user) {

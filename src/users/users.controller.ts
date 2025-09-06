@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Put,
   Delete,
   Body,
@@ -17,7 +16,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { IsString, MinLength, MaxLength, IsOptional, IsEnum, IsEmail } from 'class-validator';
+import { IsString, MinLength, MaxLength, IsOptional, IsEnum } from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()

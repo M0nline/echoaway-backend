@@ -23,7 +23,7 @@ export class RegisterDto {
   password: string;
 
   @IsOptional()
-  @IsEnum(UserRole, { message: 'Rôle invalide' })
+  @IsEnum([UserRole.HOST, UserRole.GUEST], { message: 'Rôle invalide. Seuls "host" et "guest" sont autorisés' })
   role?: UserRole;
 
   @IsOptional()

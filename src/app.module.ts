@@ -28,7 +28,6 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
         
         // Détecter l'environnement
         const isProduction = process.env.NODE_ENV === 'production';
-        const isLocalDev = process.env.NODE_ENV === 'development';
         
         const config = {
           type: 'postgres' as const,
