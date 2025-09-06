@@ -1,6 +1,8 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AccommodationsModule } from './accommodations/accommodations.module';
@@ -20,6 +22,15 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+    }),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          name: 'short',
+          ttl: 60000, // 1 minute
+          limit: 3, // 3 requêtes par minute par défaut
+        },
+      ],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -67,5 +78,9 @@ export class AppModule implements OnModuleInit {
   onModuleInit() {
     console.log('🚀 AppModule initialized successfully!');
     console.log('📦 Modules loaded:', this.constructor.name);
+    console.log('🔧 ThrottlerModule configuré avec:', {
+      ttl: 60000,
+      limit: 3
+    });
   }
 }

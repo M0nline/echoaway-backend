@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -8,9 +9,12 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from '../users/user.entity';
 
-@Controller('api/auth')  // Ajout du préfixe 'api/auth'
+@Controller('api/auth')
+@UseGuards(ThrottlerGuard)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {
+    console.log('🔧 AuthController: ThrottlerGuard configuré');
+  }
 
   @Get('test')
   test() {
@@ -19,13 +23,16 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
+  @Throttle({ short: { limit: 3, ttl: 60000 } }) // 3 tentatives par minute
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ short: { limit: 2, ttl: 60000 } }) // 2 tentatives par minute
   async login(@Body() loginDto: LoginDto) {
+    console.log('🔍 LOGIN: Tentative de connexion pour:', loginDto.email);
     return this.authService.login(loginDto);
   }
 
@@ -53,12 +60,14 @@ export class AuthController {
 
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 2, ttl: 300000 } }) // 2 tentatives par 5 minutes
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     return this.authService.forgotPassword(forgotPasswordDto);
   }
 
   @Post('reset-password')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 3, ttl: 60000 } }) // 3 tentatives par minute
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.resetPassword(resetPasswordDto);
   }
