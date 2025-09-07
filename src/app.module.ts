@@ -28,22 +28,36 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const databaseUrl = configService.get('DATABASE_URL');
-
-        // Détecter l'environnement
         const isProduction = process.env.NODE_ENV === 'production';
 
-        const config = {
-          type: 'postgres' as const,
-          url: databaseUrl, // ✅ Utiliser DATABASE_URL directement (comme avant)
-          entities: [User, Accommodation, Favorite, AccommodationImage],
-          synchronize: true, // ✅ En dev, TypeORM crée tout automatiquement
-          logging: true,
-          // migrations: [__dirname + '/migrations/*{.ts,.js}'], // ❌ Pas besoin en dev
-          ssl: isProduction ? { rejectUnauthorized: false } : false, // SSL seulement en production
-        };
+        // Configuration conditionnelle selon l'environnement
+        const config = isProduction 
+          ? {
+              // 🚀 PRODUCTION (Railway) : utiliser DATABASE_URL
+              type: 'postgres' as const,
+              url: databaseUrl,
+              entities: [User, Accommodation, Favorite, AccommodationImage],
+              synchronize: false, // ❌ PROD : pas de synchronize automatique
+              logging: false, // ❌ PROD : pas de logs SQL
+              ssl: { rejectUnauthorized: false }, // ✅ PROD : SSL requis
+            }
+          : {
+              // 🛠️ DEVELOPMENT (Docker local) : variables individuelles
+              type: 'postgres' as const,
+              host: configService.get<string>('DB_HOST') || 'db',
+              port: parseInt(configService.get<string>('DB_PORT') || '5432'),
+              username: configService.get<string>('DB_USER') || 'echoaway',
+              password: configService.get<string>('DB_PASSWORD') || 'echoaway',
+              database: configService.get<string>('DB_NAME') || 'echoaway',
+              entities: [User, Accommodation, Favorite, AccommodationImage],
+              synchronize: true, // ✅ DEV : synchronize automatique
+              logging: true, // ✅ DEV : logs SQL pour debug
+              ssl: false, // ❌ DEV : pas de SSL
+            };
 
         console.log('🔧 TypeORM Config:', {
-          url: databaseUrl ? 'configured' : 'missing',
+          environment: isProduction ? 'PRODUCTION' : 'DEVELOPMENT',
+          connection: isProduction ? 'DATABASE_URL' : 'individual variables',
           synchronize: config.synchronize,
           logging: config.logging,
           entities: config.entities.map((e) => e.name),
