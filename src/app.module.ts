@@ -1,8 +1,7 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AccommodationsModule } from './accommodations/accommodations.module';
@@ -10,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { AccommodationImagesModule } from './accommodation-images/accommodation-images.module';
+import { SecurityModule } from './security/security.module';
+import { SecurityConfigService } from './security/security-config.service';
 
 // Import explicite de toutes les entités
 import { User } from './users/user.entity';
@@ -23,14 +24,12 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
       isGlobal: true,
       envFilePath: '.env',
     }),
-    ThrottlerModule.forRoot({
-      throttlers: [
-        {
-          name: 'short',
-          ttl: 60000, // 1 minute
-          limit: 3, // 3 requêtes par minute par défaut
-        },
-      ],
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule, SecurityModule],
+      useFactory: (configService: ConfigService, securityConfigService: SecurityConfigService) => {
+        return securityConfigService.getRateLimitConfig();
+      },
+      inject: [ConfigService, SecurityConfigService],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -65,6 +64,7 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
       },
       inject: [ConfigService],
     }),
+    SecurityModule,
     AccommodationsModule,
     AuthModule,
     UsersModule,
