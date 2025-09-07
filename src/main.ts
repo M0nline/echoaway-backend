@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { SecurityConfigService } from './security/security-config.service';
+import { SecurityConfigService } from './core';
 import helmet from 'helmet';
 
 async function bootstrap() {
