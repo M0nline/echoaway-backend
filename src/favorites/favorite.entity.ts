@@ -1,8 +1,18 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Unique,
+} from 'typeorm';
 import { User } from '../users/user.entity';
 import { Accommodation } from '../accommodations/accommodation.entity';
 
 @Entity('favorites')
+@Unique(['userId', 'accommodationId'])
 export class Favorite {
   @PrimaryGeneratedColumn()
   id: number;

@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Accommodation } from '../accommodations/accommodation.entity';
 
 @Entity('accommodation_images')
@@ -22,7 +30,10 @@ export class AccommodationImage {
   updatedAt: Date;
 
   // Relations
-  @ManyToOne(() => Accommodation, (accommodation) => accommodation.accommodationImages)
+  @ManyToOne(
+    () => Accommodation,
+    (accommodation) => accommodation.accommodationImages,
+  )
   @JoinColumn({ name: 'accommodationId' })
   accommodation: Accommodation;
 }

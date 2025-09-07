@@ -7,17 +7,21 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { User } from '../users/user.entity';
+import { PasswordResetToken } from './password-reset-token.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, PasswordResetToken]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET', 'your-super-secret-key'),
+        secret: configService.get<string>(
+          'JWT_SECRET',
+          'your-super-secret-key',
+        ),
         signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '7d'),
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '2h'), // Durée plus courte pour la sécurité
         },
       }),
       inject: [ConfigService],
@@ -28,6 +32,3 @@ import { User } from '../users/user.entity';
   exports: [AuthService],
 })
 export class AuthModule {}
-
-
-

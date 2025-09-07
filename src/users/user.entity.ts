@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Accommodation } from '../accommodations/accommodation.entity';
 import { Favorite } from '../favorites/favorite.entity';
 
@@ -6,7 +13,7 @@ export enum UserRole {
   ADMIN = 'admin',
   HOST = 'host',
   GUEST = 'guest',
-  VISITOR = 'visitor'
+  VISITOR = 'visitor',
 }
 
 @Entity('users')
@@ -14,8 +21,8 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true, length: 50 })
-  login: string;
+  @Column({ unique: true, length: 255 })
+  email: string;
 
   @Column({ select: false, length: 255 })
   password: string;
@@ -32,7 +39,7 @@ export class User {
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.VISITOR
+    default: UserRole.VISITOR,
   })
   role: UserRole;
 
@@ -48,4 +55,21 @@ export class User {
 
   @OneToMany(() => Favorite, (favorite) => favorite.user)
   favorites: Favorite[];
+
+  // Méthodes utilitaires pour les rôles
+  isAdmin(): boolean {
+    return this.role === UserRole.ADMIN;
+  }
+
+  isHost(): boolean {
+    return this.role === UserRole.HOST || this.role === UserRole.ADMIN;
+  }
+
+  isGuest(): boolean {
+    return this.role === UserRole.GUEST;
+  }
+
+  isVisitor(): boolean {
+    return this.role === UserRole.VISITOR;
+  }
 }

@@ -1,4 +1,13 @@
-import { IsString, IsNumber, IsOptional, IsEnum, IsUrl, IsPhoneNumber, Min, Max } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsUrl,
+  IsPhoneNumber,
+  Min,
+  Max,
+  IsIn,
+} from 'class-validator';
 import { AccommodationType, ConnectivityType } from '../accommodation.entity';
 
 export class CreateAccommodationDto {
@@ -21,15 +30,17 @@ export class CreateAccommodationDto {
   @Max(100)
   city: string;
 
-  @IsEnum(AccommodationType)
-  type: AccommodationType;
+  @IsString()
+  @IsIn(Object.values(AccommodationType))
+  type: string;
 
   @IsNumber()
   @Min(1)
   numberOfBeds: number;
 
-  @IsEnum(ConnectivityType)
-  connectivity: ConnectivityType;
+  @IsString()
+  @IsIn(Object.values(ConnectivityType))
+  connectivity: string;
 
   @IsNumber()
   @Min(0)
