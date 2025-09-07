@@ -49,6 +49,14 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
           entities: config.entities.map((e) => e.name),
         });
 
+        // 🔍 ENQUÊTE: Log détaillé de la config TypeORM
+        console.log('🔍 ENQUÊTE TypeORM - Détails:', {
+          url: databaseUrl,
+          ssl: config.ssl,
+          isProduction: isProduction,
+          port: process.env.PORT
+        });
+
         return config;
       },
       inject: [ConfigService],
