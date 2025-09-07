@@ -1,22 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { SecurityConfigService } from './security/security-config.service';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // CORS - Configuration flexible pour dev/prod
-  const allowedOrigins = [
-    'http://localhost:3000',           // Développement local
-    'http://localhost:3001',           // Développement local (alternative)
-    process.env.FRONTEND_URL,          // Production (si défini)
-  ].filter(Boolean); // Retire les valeurs undefined
+  // Récupération du service de configuration de sécurité
+  const securityConfigService = app.get(SecurityConfigService);
 
-  app.enableCors({
-    origin: allowedOrigins,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+  // Application des configurations de sécurité
+  app.use(helmet(securityConfigService.getHelmetConfig()));
+  app.enableCors(securityConfigService.getCorsConfig());
+
+  console.log('✅ Configuration de sécurité appliquée:', {
+    helmet: 'configuré',
+    cors: 'configuré',
+    environment: securityConfigService.isProduction() ? 'production' : 'development',
   });
 
   // Validation globale
