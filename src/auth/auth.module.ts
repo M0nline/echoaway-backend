@@ -18,7 +18,7 @@ import { PasswordResetToken } from './password-reset-token.entity';
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET', 'your-super-secret-key'),
         signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '7d'),
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '2h'), // Durée plus courte pour la sécurité
         },
       }),
       inject: [ConfigService],
