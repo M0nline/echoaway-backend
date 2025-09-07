@@ -34,7 +34,11 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
 
         const config = {
           type: 'postgres' as const,
-          url: databaseUrl, // ✅ Utiliser DATABASE_URL directement (comme avant)
+          host: configService.get<string>('DB_HOST') || 'db',
+          port: parseInt(configService.get<string>('DB_PORT') || '5432'),
+          username: configService.get<string>('DB_USER') || 'postgres',
+          password: configService.get<string>('DB_PASSWORD') || 'password',
+          database: configService.get<string>('DB_NAME') || 'echoaway',
           entities: [User, Accommodation, Favorite, AccommodationImage],
           synchronize: true, // ✅ En dev, TypeORM crée tout automatiquement
           logging: true,
