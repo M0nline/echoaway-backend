@@ -46,6 +46,19 @@ jobs:
       - name: Run linting
         run: npm run lint:check
 
+      - name: Run unit tests
+        run: npm test
+        env:
+          NODE_ENV: test
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: echoaway
+          DB_PASSWORD: echoaway
+          DB_NAME: echoaway_test
+          DB_SSL: false
+          JWT_SECRET: test-secret
+          JWT_EXPIRES_IN: 1h
+
       - name: Build application
         run: npm run build
         env:
