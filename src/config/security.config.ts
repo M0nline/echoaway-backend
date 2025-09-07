@@ -41,6 +41,7 @@ export const createSecurityConfig = (
       origin: [
         'http://localhost:3000', // Développement local
         'http://localhost:3001', // Développement local (alternative)
+        'https://echoaway.vercel.app', // Production Vercel
         frontendUrl, // Production (si défini)
       ].filter(Boolean), // Retire les valeurs undefined
       credentials: true,
