@@ -10,11 +10,14 @@ export class ThrottlingConfigService implements ThrottlerOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
 
   createThrottlerOptions(): ThrottlerModuleOptions {
+    console.log('🔍 ENQUÊTE - Début createThrottlerOptions...');
+    
     const nodeEnv = this.configService.get('NODE_ENV');
     const isProduction = nodeEnv === 'production';
 
     console.log('🔧 Environnement détecté:', nodeEnv);
     console.log('🔧 Mode production:', isProduction);
+    console.log('🔍 ENQUÊTE - Variables d\'environnement récupérées...');
 
     const throttlers = [
       // Protection générale - requêtes par minute
@@ -64,7 +67,10 @@ export class ThrottlingConfigService implements ThrottlerOptionsFactory {
       '🔧 Configuration Throttler appliquée:',
       JSON.stringify(throttlers, null, 2),
     );
-
-    return { throttlers };
+    
+    console.log('🔍 ENQUÊTE - Avant return de createThrottlerOptions...');
+    const result = { throttlers };
+    console.log('🔍 ENQUÊTE - createThrottlerOptions terminé avec succès');
+    return result;
   }
 }
