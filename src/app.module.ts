@@ -28,10 +28,10 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const databaseUrl = configService.get('DATABASE_URL');
-        
+
         // Détecter l'environnement
         const isProduction = process.env.NODE_ENV === 'production';
-        
+
         const config = {
           type: 'postgres' as const,
           host: configService.get<string>('DB_HOST') || 'db',
@@ -45,14 +45,14 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
           // migrations: [__dirname + '/migrations/*{.ts,.js}'], // ❌ Pas besoin en dev
           ssl: isProduction ? { rejectUnauthorized: false } : false, // SSL seulement en production
         };
-        
+
         console.log('🔧 TypeORM Config:', {
           url: databaseUrl ? 'configured' : 'missing',
           synchronize: config.synchronize,
           logging: config.logging,
-          entities: config.entities.map(e => e.name)
+          entities: config.entities.map((e) => e.name),
         });
-        
+
         return config;
       },
       inject: [ConfigService],
@@ -71,6 +71,8 @@ export class AppModule implements OnModuleInit {
   onModuleInit() {
     console.log('🚀 AppModule initialized successfully!');
     console.log('📦 Modules loaded:', this.constructor.name);
-    console.log('🔧 ThrottlingModule configuré avec protection anti-brute force');
+    console.log(
+      '🔧 ThrottlingModule configuré avec protection anti-brute force',
+    );
   }
 }

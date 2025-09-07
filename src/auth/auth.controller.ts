@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -30,9 +38,9 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @Throttle({ 
+  @Throttle({
     'login-user': {}, // Utilise la config globale
-    'login-ip': {}    // Utilise la config globale
+    'login-ip': {}, // Utilise la config globale
   })
   async login(@Body() loginDto: LoginDto) {
     console.log('🔍 LOGIN: Tentative de connexion pour:', loginDto.email);
@@ -45,7 +53,7 @@ export class AuthController {
     const validatedUser = await this.authService.validateUser({
       sub: user.id,
       email: user.email,
-      role: user.role
+      role: user.role,
     });
     return { user: validatedUser };
   }
@@ -75,6 +83,3 @@ export class AuthController {
     return this.authService.resetPassword(resetPasswordDto);
   }
 }
-
-
-

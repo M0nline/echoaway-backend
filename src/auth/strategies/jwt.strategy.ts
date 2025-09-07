@@ -13,7 +13,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET', 'your-super-secret-key'),
+      secretOrKey: configService.get<string>(
+        'JWT_SECRET',
+        'your-super-secret-key',
+      ),
     });
   }
 
@@ -24,10 +27,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       console.log('❌ JWT Strategy - Utilisateur non trouvé');
       throw new UnauthorizedException();
     }
-    console.log('✅ JWT Strategy - Utilisateur validé:', { id: user.id, email: user.email });
+    console.log('✅ JWT Strategy - Utilisateur validé:', {
+      id: user.id,
+      email: user.email,
+    });
     return user;
   }
 }
-
-
-

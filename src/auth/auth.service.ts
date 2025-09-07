@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -27,7 +32,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<{ user: Partial<User>; token: string }> {
+  async register(
+    registerDto: RegisterDto,
+  ): Promise<{ user: Partial<User>; token: string }> {
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await this.userRepository.findOne({
       where: { email: registerDto.email },
@@ -57,11 +64,23 @@ export class AuthService {
     return { user: userWithoutPassword, token };
   }
 
-  async login(loginDto: LoginDto): Promise<{ user: Partial<User>; token: string }> {
+  async login(
+    loginDto: LoginDto,
+  ): Promise<{ user: Partial<User>; token: string }> {
     // Trouver l'utilisateur par email (avec le mot de passe pour la validation)
     const user = await this.userRepository.findOne({
       where: { email: loginDto.email },
-      select: ['id', 'email', 'password', 'firstname', 'name', 'avatar', 'role', 'createdAt', 'updatedAt'],
+      select: [
+        'id',
+        'email',
+        'password',
+        'firstname',
+        'name',
+        'avatar',
+        'role',
+        'createdAt',
+        'updatedAt',
+      ],
     });
 
     if (!user) {
@@ -69,7 +88,10 @@ export class AuthService {
     }
 
     // Valider le mot de passe avec bcrypt
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    );
     if (!isPasswordValid) {
       throw new UnauthorizedException('Email ou mot de passe incorrect');
     }
@@ -84,17 +106,21 @@ export class AuthService {
 
   async validateUser(payload: JwtPayload): Promise<User> {
     console.log('🔍 Validation du token JWT avec payload:', payload);
-    
+
     const user = await this.userRepository.findOne({
       where: { id: payload.sub },
     });
 
     if (!user) {
-      console.log('❌ Utilisateur non trouvé pour l\'ID:', payload.sub);
+      console.log("❌ Utilisateur non trouvé pour l'ID:", payload.sub);
       throw new UnauthorizedException('Utilisateur non trouvé');
     }
 
-    console.log('✅ Utilisateur validé:', { id: user.id, email: user.email, role: user.role });
+    console.log('✅ Utilisateur validé:', {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    });
     return user;
   }
 
@@ -121,14 +147,19 @@ export class AuthService {
     return { token };
   }
 
-  async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<{ message: string }> {
+  async forgotPassword(
+    forgotPasswordDto: ForgotPasswordDto,
+  ): Promise<{ message: string }> {
     const user = await this.userRepository.findOne({
       where: { email: forgotPasswordDto.email },
     });
 
     if (!user) {
       // Pour des raisons de sécurité, on ne révèle pas si l'email existe ou non
-      return { message: 'Si cet email existe, un lien de réinitialisation a été envoyé' };
+      return {
+        message:
+          'Si cet email existe, un lien de réinitialisation a été envoyé',
+      };
     }
 
     // Générer un token unique
@@ -152,10 +183,14 @@ export class AuthService {
     // Pour l'instant, on retourne juste le token (à supprimer en production)
     console.log(`Token de réinitialisation pour ${user.email}: ${token}`);
 
-    return { message: 'Si cet email existe, un lien de réinitialisation a été envoyé' };
+    return {
+      message: 'Si cet email existe, un lien de réinitialisation a été envoyé',
+    };
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<{ message: string }> {
+  async resetPassword(
+    resetPasswordDto: ResetPasswordDto,
+  ): Promise<{ message: string }> {
     const passwordResetToken = await this.passwordResetTokenRepository.findOne({
       where: { token: resetPasswordDto.token },
       relations: ['user'],

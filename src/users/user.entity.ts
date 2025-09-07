@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Accommodation } from '../accommodations/accommodation.entity';
 import { Favorite } from '../favorites/favorite.entity';
 
@@ -6,7 +13,7 @@ export enum UserRole {
   ADMIN = 'admin',
   HOST = 'host',
   GUEST = 'guest',
-  VISITOR = 'visitor'
+  VISITOR = 'visitor',
 }
 
 @Entity('users')
@@ -32,7 +39,7 @@ export class User {
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.VISITOR
+    default: UserRole.VISITOR,
   })
   role: UserRole;
 

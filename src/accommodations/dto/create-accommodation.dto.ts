@@ -1,4 +1,13 @@
-import { IsString, IsNumber, IsOptional, IsUrl, IsPhoneNumber, Min, Max, IsIn } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsUrl,
+  IsPhoneNumber,
+  Min,
+  Max,
+  IsIn,
+} from 'class-validator';
 import { AccommodationType, ConnectivityType } from '../accommodation.entity';
 
 export class CreateAccommodationDto {

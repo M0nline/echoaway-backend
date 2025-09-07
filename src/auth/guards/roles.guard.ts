@@ -7,7 +7,10 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.get<UserRole[]>('roles', context.getHandler());
+    const requiredRoles = this.reflector.get<UserRole[]>(
+      'roles',
+      context.getHandler(),
+    );
     if (!requiredRoles) {
       return true; // Pas de rôle requis = accès public
     }
@@ -17,7 +20,7 @@ export class RolesGuard implements CanActivate {
       return false; // Pas d'utilisateur = accès refusé
     }
 
-    return requiredRoles.some(role => {
+    return requiredRoles.some((role) => {
       if (role === UserRole.ADMIN && user.isAdmin()) return true;
       if (role === UserRole.HOST && user.isHost()) return true;
       if (role === UserRole.GUEST && user.isGuest()) return true;

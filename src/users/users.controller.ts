@@ -16,7 +16,13 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { IsString, MinLength, MaxLength, IsOptional, IsEnum } from 'class-validator';
+import {
+  IsString,
+  MinLength,
+  MaxLength,
+  IsOptional,
+  IsEnum,
+} from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -32,18 +38,26 @@ export class UpdateUserDto {
   name?: string;
 
   @IsOptional()
-  @IsString({ message: 'L\'avatar doit être une URL valide' })
+  @IsString({ message: "L'avatar doit être une URL valide" })
   avatar?: string;
 }
 
 export class ChangePasswordDto {
-  @IsString({ message: 'Le mot de passe actuel doit être une chaîne de caractères' })
+  @IsString({
+    message: 'Le mot de passe actuel doit être une chaîne de caractères',
+  })
   @MinLength(1, { message: 'Le mot de passe actuel est requis' })
   currentPassword: string;
 
-  @IsString({ message: 'Le nouveau mot de passe doit être une chaîne de caractères' })
-  @MinLength(8, { message: 'Le nouveau mot de passe doit contenir au moins 8 caractères' })
-  @MaxLength(100, { message: 'Le nouveau mot de passe ne peut pas dépasser 100 caractères' })
+  @IsString({
+    message: 'Le nouveau mot de passe doit être une chaîne de caractères',
+  })
+  @MinLength(8, {
+    message: 'Le nouveau mot de passe doit contenir au moins 8 caractères',
+  })
+  @MaxLength(100, {
+    message: 'Le nouveau mot de passe ne peut pas dépasser 100 caractères',
+  })
   newPassword: string;
 }
 
@@ -106,7 +120,9 @@ export class UsersController {
       throw new Error('Mot de passe actuel incorrect');
     }
 
-    const hashedNewPassword = await this.usersService.hashPassword(changePasswordDto.newPassword);
+    const hashedNewPassword = await this.usersService.hashPassword(
+      changePasswordDto.newPassword,
+    );
     await this.usersService.update(user.id, { password: hashedNewPassword });
 
     return { message: 'Mot de passe modifié avec succès' };
@@ -146,7 +162,9 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserRoleDto: UpdateUserRoleDto,
   ): Promise<User> {
-    const updatedUser = await this.usersService.update(id, { role: updateUserRoleDto.role });
+    const updatedUser = await this.usersService.update(id, {
+      role: updateUserRoleDto.role,
+    });
     if (!updatedUser) {
       throw new Error('Utilisateur non trouvé');
     }

@@ -17,7 +17,9 @@ async function bootstrap() {
   console.log('✅ Configuration de sécurité appliquée:', {
     helmet: 'configuré',
     cors: 'configuré',
-    environment: securityConfigService.isProduction() ? 'production' : 'development',
+    environment: securityConfigService.isProduction()
+      ? 'production'
+      : 'development',
   });
 
   // Validation globale

@@ -16,7 +16,10 @@ import { PasswordResetToken } from './password-reset-token.entity';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET', 'your-super-secret-key'),
+        secret: configService.get<string>(
+          'JWT_SECRET',
+          'your-super-secret-key',
+        ),
         signOptions: {
           expiresIn: configService.get<string>('JWT_EXPIRES_IN', '2h'), // Durée plus courte pour la sécurité
         },
@@ -29,6 +32,3 @@ import { PasswordResetToken } from './password-reset-token.entity';
   exports: [AuthService],
 })
 export class AuthModule {}
-
-
-

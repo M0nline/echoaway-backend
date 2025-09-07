@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Accommodation, ConnectivityType, AccommodationType } from './accommodation.entity';
+import {
+  Accommodation,
+  ConnectivityType,
+  AccommodationType,
+} from './accommodation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -19,9 +23,7 @@ export class AccommodationsService {
     return this.accommodationsRepository.findOne({ where: { id } });
   }
 
-  async create(
-    newAccommodation: any,
-  ): Promise<Accommodation> {
+  async create(newAccommodation: any): Promise<Accommodation> {
     // Convertir les strings en enums
     const accommodationData = {
       ...newAccommodation,
@@ -29,15 +31,13 @@ export class AccommodationsService {
       connectivity: newAccommodation.connectivity as ConnectivityType,
     };
 
-    const accommodation = this.accommodationsRepository.create(accommodationData);
+    const accommodation =
+      this.accommodationsRepository.create(accommodationData);
     const result = await this.accommodationsRepository.save(accommodation);
     return Array.isArray(result) ? result[0] : result;
   }
 
-  async update(
-    id: number,
-    updateAccommodation: any,
-  ): Promise<Accommodation> {
+  async update(id: number, updateAccommodation: any): Promise<Accommodation> {
     const accommodation = await this.findOne(id);
     if (!accommodation) {
       throw new Error(`Accommodation with ID ${id} not found`);
@@ -46,8 +46,12 @@ export class AccommodationsService {
     // Convertir les strings en enums si nécessaire
     const updateData = {
       ...updateAccommodation,
-      type: updateAccommodation.type ? updateAccommodation.type as AccommodationType : accommodation.type,
-      connectivity: updateAccommodation.connectivity ? updateAccommodation.connectivity as ConnectivityType : accommodation.connectivity,
+      type: updateAccommodation.type
+        ? (updateAccommodation.type as AccommodationType)
+        : accommodation.type,
+      connectivity: updateAccommodation.connectivity
+        ? (updateAccommodation.connectivity as ConnectivityType)
+        : accommodation.connectivity,
     };
 
     Object.assign(accommodation, updateData);

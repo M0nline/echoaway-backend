@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { createSecurityConfig, SecurityConfig } from '../config/security.config';
+import {
+  createSecurityConfig,
+  SecurityConfig,
+} from '../config/security.config';
 
 @Injectable()
 export class SecurityConfigService {

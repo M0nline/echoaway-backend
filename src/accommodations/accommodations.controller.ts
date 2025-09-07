@@ -19,7 +19,7 @@ import { UserRole } from '../users/user.entity';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from '../users/user.entity';
 
-@Controller('api/accommodations')  // Ajout du préfixe 'api/accommodations'
+@Controller('api/accommodations') // Ajout du préfixe 'api/accommodations'
 export class AccommodationsController {
   constructor(private readonly accommodationsService: AccommodationsService) {}
 
@@ -39,9 +39,11 @@ export class AccommodationsController {
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createAccommodationDto: any,
-    @CurrentUser() _user: User
+    @CurrentUser() _user: User,
   ): Promise<Accommodation> {
-    const newAccommodation = await this.accommodationsService.create(createAccommodationDto);
+    const newAccommodation = await this.accommodationsService.create(
+      createAccommodationDto,
+    );
     // Note: hostId sera géré dans le service ou l'entité
     return newAccommodation;
   }
@@ -52,17 +54,22 @@ export class AccommodationsController {
   async update(
     @Param('id') id: string,
     @Body() updateAccommodationDto: any,
-    @CurrentUser() user: User
+    @CurrentUser() user: User,
   ): Promise<Accommodation> {
     // Vérifier que l'utilisateur est le propriétaire ou un admin
     if (user.role !== UserRole.ADMIN) {
-      const accommodation = await this.accommodationsService.findOne(Number(id));
+      const accommodation = await this.accommodationsService.findOne(
+        Number(id),
+      );
       if (accommodation && accommodation.hostId !== user.id) {
         throw new Error('Non autorisé à modifier cet hébergement');
       }
     }
-    
-    return this.accommodationsService.update(Number(id), updateAccommodationDto);
+
+    return this.accommodationsService.update(
+      Number(id),
+      updateAccommodationDto,
+    );
   }
 
   @Delete(':id')
@@ -71,16 +78,18 @@ export class AccommodationsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(
     @Param('id') id: string,
-    @CurrentUser() user: User
+    @CurrentUser() user: User,
   ): Promise<void> {
     // Vérifier que l'utilisateur est le propriétaire ou un admin
     if (user.role !== UserRole.ADMIN) {
-      const accommodation = await this.accommodationsService.findOne(Number(id));
+      const accommodation = await this.accommodationsService.findOne(
+        Number(id),
+      );
       if (accommodation && accommodation.hostId !== user.id) {
         throw new Error('Non autorisé à supprimer cet hébergement');
       }
     }
-    
+
     return this.accommodationsService.remove(Number(id));
   }
 }

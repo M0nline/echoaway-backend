@@ -12,7 +12,7 @@ async function seed() {
   }
 
   console.log('🌱 Starting database seeding...');
-  
+
   const app = await NestFactory.createApplicationContext(AppModule);
   const userRepository = app.get(getRepositoryToken(User));
 
@@ -34,7 +34,7 @@ async function seed() {
       firstname: 'Test',
       name: 'Utilisateur Test',
       role: 'VISITOR',
-      avatar: 'https://via.placeholder.com/150/96CEB4/FFFFFF?text=T'
+      avatar: 'https://via.placeholder.com/150/96CEB4/FFFFFF?text=T',
     });
 
     await userRepository.save(testUser);
@@ -43,7 +43,6 @@ async function seed() {
     console.log('🎉 Database seeding completed successfully!');
     console.log('\n📋 Test account created:');
     console.log('   Test: test@echoaway.com / test123 (ID: 1)');
-
   } catch (error) {
     console.error('❌ Seeding failed:', error);
   } finally {
