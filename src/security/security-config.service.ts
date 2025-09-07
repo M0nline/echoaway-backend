@@ -19,7 +19,7 @@ export class SecurityConfigService {
   }
 
   getRateLimitConfig() {
-    return this.config.rateLimit;
+    return this.config.rateLimit.throttlers;
   }
 
   getSecurityConfig(): SecurityConfig {

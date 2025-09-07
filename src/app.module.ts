@@ -1,7 +1,6 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AccommodationsModule } from './accommodations/accommodations.module';
@@ -10,7 +9,7 @@ import { UsersModule } from './users/users.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { AccommodationImagesModule } from './accommodation-images/accommodation-images.module';
 import { SecurityModule } from './security/security.module';
-import { SecurityConfigService } from './security/security-config.service';
+import { ThrottlingModule } from './throttling/throttling.module';
 
 // Import explicite de toutes les entités
 import { User } from './users/user.entity';
@@ -24,13 +23,7 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
       isGlobal: true,
       envFilePath: '.env',
     }),
-    ThrottlerModule.forRootAsync({
-      imports: [ConfigModule, SecurityModule],
-      useFactory: (configService: ConfigService, securityConfigService: SecurityConfigService) => {
-        return securityConfigService.getRateLimitConfig();
-      },
-      inject: [ConfigService, SecurityConfigService],
-    }),
+    ThrottlingModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
@@ -78,9 +71,6 @@ export class AppModule implements OnModuleInit {
   onModuleInit() {
     console.log('🚀 AppModule initialized successfully!');
     console.log('📦 Modules loaded:', this.constructor.name);
-    console.log('🔧 ThrottlerModule configuré avec:', {
-      ttl: 60000,
-      limit: 3
-    });
+    console.log('🔧 ThrottlingModule configuré avec protection anti-brute force');
   }
 }
