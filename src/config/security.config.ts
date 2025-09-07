@@ -45,8 +45,11 @@ export const createSecurityConfig = (
         frontendUrl, // Production (si défini)
       ].filter(Boolean), // Retire les valeurs undefined
       credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+      exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
+      preflightContinue: false,
+      optionsSuccessStatus: 204,
     },
 
     rateLimit: {
