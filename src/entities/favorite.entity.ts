@@ -8,8 +8,8 @@ import {
   UpdateDateColumn,
   Unique,
 } from 'typeorm';
-import { User } from '../users/user.entity';
-import { Accommodation } from '../accommodations/accommodation.entity';
+import { User } from './user.entity';
+import { Accommodation } from './accommodation.entity';
 
 @Entity('favorites')
 @Unique(['userId', 'accommodationId'])

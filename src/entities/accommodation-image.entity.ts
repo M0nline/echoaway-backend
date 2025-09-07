@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Accommodation } from '../accommodations/accommodation.entity';
+import { Accommodation } from './accommodation.entity';
 
 @Entity('accommodation_images')
 export class AccommodationImage {

@@ -8,9 +8,9 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { User } from '../users/user.entity';
-import { Favorite } from '../favorites/favorite.entity';
-import { AccommodationImage } from '../accommodation-images/accommodation-image.entity';
+import { User } from './user.entity';
+import { Favorite } from './favorite.entity';
+import { AccommodationImage } from './accommodation-image.entity';
 
 export enum AccommodationType {
   APARTMENT = 'Appartement',

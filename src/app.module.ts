@@ -3,19 +3,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AccommodationsModule } from './accommodations/accommodations.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { FavoritesModule } from './favorites/favorites.module';
-import { AccommodationImagesModule } from './accommodation-images/accommodation-images.module';
-import { SecurityModule } from './security/security.module';
-import { ThrottlingModule } from './throttling/throttling.module';
+import { AccommodationsModule } from './domains/accommodation/accommodations.module';
+import { AuthModule } from './domains/auth/auth.module';
+import { UsersModule } from './domains/user/users.module';
+import { FavoritesModule } from './domains/favorites/favorites.module';
+import { AccommodationImagesModule } from './domains/accommodation/accommodation-images/accommodation-images.module';
+import { SecurityModule, ThrottlingModule } from './core';
 
-// Import explicite de toutes les entités
-import { User } from './users/user.entity';
-import { Accommodation } from './accommodations/accommodation.entity';
-import { Favorite } from './favorites/favorite.entity';
-import { AccommodationImage } from './accommodation-images/accommodation-image.entity';
+// Import centralisé de toutes les entités
+import { User, Accommodation, Favorite, AccommodationImage, PasswordResetToken } from './entities';
 
 @Module({
   imports: [
@@ -36,7 +32,7 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
               // 🚀 PRODUCTION (Railway) : utiliser DATABASE_URL
               type: 'postgres' as const,
               url: databaseUrl,
-              entities: [User, Accommodation, Favorite, AccommodationImage],
+              entities: [User, Accommodation, Favorite, AccommodationImage, PasswordResetToken],
               synchronize: false, // ❌ PROD : pas de synchronize automatique
               logging: false, // ❌ PROD : pas de logs SQL
               ssl: { rejectUnauthorized: false }, // ✅ PROD : SSL requis
@@ -49,7 +45,7 @@ import { AccommodationImage } from './accommodation-images/accommodation-image.e
               username: configService.get<string>('DB_USER') || 'echoaway',
               password: configService.get<string>('DB_PASSWORD') || 'echoaway',
               database: configService.get<string>('DB_NAME') || 'echoaway',
-              entities: [User, Accommodation, Favorite, AccommodationImage],
+              entities: [User, Accommodation, Favorite, AccommodationImage, PasswordResetToken],
               synchronize: true, // ✅ DEV : synchronize automatique
               logging: true, // ✅ DEV : logs SQL pour debug
               ssl: false, // ❌ DEV : pas de SSL

@@ -6,8 +6,8 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { Accommodation } from '../accommodations/accommodation.entity';
-import { Favorite } from '../favorites/favorite.entity';
+import { Accommodation } from './accommodation.entity';
+import { Favorite } from './favorite.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
