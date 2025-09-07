@@ -29,10 +29,10 @@ async function bootstrap() {
     console.log('🛡️ Applying security configurations...');
     const helmetConfig = securityConfigService.getHelmetConfig();
     const corsConfig = securityConfigService.getCorsConfig();
-    
+
     console.log('🔧 Helmet config:', JSON.stringify(helmetConfig, null, 2));
     console.log('🔧 CORS config:', JSON.stringify(corsConfig, null, 2));
-    
+
     app.use(helmet(helmetConfig));
     app.enableCors(corsConfig);
     console.log('✅ Security configurations applied successfully');
@@ -45,7 +45,7 @@ async function bootstrap() {
         origin: req.headers.origin,
         userAgent: req.headers['user-agent'],
         headers: req.headers,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
       next();
     });
@@ -56,8 +56,10 @@ async function bootstrap() {
         console.log('🔍 PREFLIGHT REQUEST DETECTED:', {
           url: req.url,
           origin: req.headers.origin,
-          accessControlRequestMethod: req.headers['access-control-request-method'],
-          accessControlRequestHeaders: req.headers['access-control-request-headers']
+          accessControlRequestMethod:
+            req.headers['access-control-request-method'],
+          accessControlRequestHeaders:
+            req.headers['access-control-request-headers'],
         });
       }
       next();
@@ -84,12 +86,13 @@ async function bootstrap() {
 
     const port = process.env.PORT || 3001;
     console.log(`🌐 Starting server on port ${port}...`);
-    
+
     await app.listen(port);
     console.log(`🚀 Application is running on: http://localhost:${port}`);
     console.log(`📡 API available at: http://localhost:${port}`);
-    console.log(`🔍 Health check available at: http://localhost:${port}/status`);
-    
+    console.log(
+      `🔍 Health check available at: http://localhost:${port}/status`,
+    );
   } catch (error) {
     console.error('❌ Error during application startup:', error);
     console.error('❌ Error stack:', error.stack);

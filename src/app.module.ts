@@ -11,7 +11,13 @@ import { AccommodationImagesModule } from './domains/accommodation/accommodation
 import { SecurityModule, ThrottlingModule } from './core';
 
 // Import centralisé de toutes les entités
-import { User, Accommodation, Favorite, AccommodationImage, PasswordResetToken } from './entities';
+import {
+  User,
+  Accommodation,
+  Favorite,
+  AccommodationImage,
+  PasswordResetToken,
+} from './entities';
 
 @Module({
   imports: [
@@ -27,12 +33,18 @@ import { User, Accommodation, Favorite, AccommodationImage, PasswordResetToken }
         const isProduction = process.env.NODE_ENV === 'production';
 
         // Configuration conditionnelle selon l'environnement
-        const config = isProduction 
+        const config = isProduction
           ? {
               // 🚀 PRODUCTION (Railway) : utiliser DATABASE_URL
               type: 'postgres' as const,
               url: databaseUrl,
-              entities: [User, Accommodation, Favorite, AccommodationImage, PasswordResetToken],
+              entities: [
+                User,
+                Accommodation,
+                Favorite,
+                AccommodationImage,
+                PasswordResetToken,
+              ],
               synchronize: false, // ❌ PROD : pas de synchronize automatique
               logging: false, // ❌ PROD : pas de logs SQL
               ssl: { rejectUnauthorized: false }, // ✅ PROD : SSL requis
@@ -45,7 +57,13 @@ import { User, Accommodation, Favorite, AccommodationImage, PasswordResetToken }
               username: configService.get<string>('DB_USER') || 'echoaway',
               password: configService.get<string>('DB_PASSWORD') || 'echoaway',
               database: configService.get<string>('DB_NAME') || 'echoaway',
-              entities: [User, Accommodation, Favorite, AccommodationImage, PasswordResetToken],
+              entities: [
+                User,
+                Accommodation,
+                Favorite,
+                AccommodationImage,
+                PasswordResetToken,
+              ],
               synchronize: true, // ✅ DEV : synchronize automatique
               logging: true, // ✅ DEV : logs SQL pour debug
               ssl: false, // ❌ DEV : pas de SSL
@@ -64,7 +82,7 @@ import { User, Accommodation, Favorite, AccommodationImage, PasswordResetToken }
           url: databaseUrl,
           ssl: config.ssl,
           isProduction: isProduction,
-          port: process.env.PORT
+          port: process.env.PORT,
         });
 
         return config;
