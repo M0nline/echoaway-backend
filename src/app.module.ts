@@ -45,6 +45,8 @@ import {
                 AccommodationImage,
                 PasswordResetToken,
               ],
+              migrations: ['dist/migrations/*.js'],
+              migrationsTableName: 'typeorm_migrations',
               synchronize: false, // ❌ PROD : pas de synchronize automatique
               logging: false, // ❌ PROD : pas de logs SQL
               ssl: { rejectUnauthorized: false }, // ✅ PROD : SSL requis
@@ -52,11 +54,11 @@ import {
           : {
               // 🛠️ DEVELOPMENT (Docker local) : variables individuelles
               type: 'postgres' as const,
-              host: configService.get<string>('DB_HOST') || 'db',
-              port: parseInt(configService.get<string>('DB_PORT') || '5432'),
-              username: configService.get<string>('DB_USER') || 'echoaway',
-              password: configService.get<string>('DB_PASSWORD') || 'echoaway',
-              database: configService.get<string>('DB_NAME') || 'echoaway',
+              host: configService.get<string>('DB_HOST'),
+              port: parseInt(configService.get<string>('DB_PORT')!),
+              username: configService.get<string>('DB_USER'),
+              password: configService.get<string>('DB_PASSWORD'),
+              database: configService.get<string>('DB_NAME'),
               entities: [
                 User,
                 Accommodation,
@@ -64,7 +66,9 @@ import {
                 AccommodationImage,
                 PasswordResetToken,
               ],
-              synchronize: true, // ✅ DEV : synchronize automatique
+              migrations: ['dist/migrations/*.js'],
+              migrationsTableName: 'typeorm_migrations',
+              synchronize: false, // ❌ DEV : désactivé pour utiliser les migrations
               logging: true, // ✅ DEV : logs SQL pour debug
               ssl: false, // ❌ DEV : pas de SSL
             };
