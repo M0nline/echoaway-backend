@@ -74,6 +74,9 @@ export class Accommodation {
   })
   connectivity: ConnectivityType;
 
+  @Column({ default: false })
+  petsAllowed: boolean;
+
   // Tarification
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   priceMinPerNight: number;
@@ -114,6 +117,7 @@ export class Accommodation {
       city: this.city,
       type: this.type,
       connectivity: this.connectivity,
+      petsAllowed: this.petsAllowed,
       description: this.description,
       priceMinPerNight: this.priceMinPerNight,
       priceMaxPerNight: this.priceMaxPerNight,
