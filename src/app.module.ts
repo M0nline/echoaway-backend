@@ -87,7 +87,6 @@ import {
           ssl: config.ssl,
           isProduction: isProduction,
           port: process.env.PORT,
-          port: process.env.PORT,
         });
 
         return config;
