@@ -112,14 +112,22 @@ npm install
 ## 📦 Backend Scripts
 
 ```bash
-npm run dev          # Development mode with hot reload
-npm run build        # Production build
-npm run start        # Start in production mode
-npm run start:prod   # Optimized production start
-npm run lint         # Linting with ESLint
-npm run lint:check   # Linting verification
-npm run format       # Formatting with Prettier
-npm run format:check # Formatting verification
+npm run dev              # Development mode with hot reload
+npm run build            # Production build
+npm run start            # Start in production mode
+npm run start:prod       # Optimized production start
+npm run start:railway    # Production start with migrations (Railway)
+npm run lint             # Linting with ESLint
+npm run lint:check       # Linting verification
+npm run format           # Formatting with Prettier
+npm run format:check     # Formatting verification
+
+# Migration scripts
+npm run migration:generate -- src/migrations/MigrationName
+npm run migration:run     # Run migrations (development)
+npm run migration:run:prod # Run migrations (production)
+npm run migration:revert  # Revert last migration
+npm run migration:show    # View migration status
 ```
 
 ## ⚙️ Environment Variables
@@ -195,45 +203,72 @@ docker run -p 3001:3001 echoaway-backend
 
 ## 🏗️ Backend Architecture
 
-- **Modules** : NestJS modular architecture
-- **Entities** : TypeORM models with relationships
+### Directory Structure
+```
+src/
+├── entities/          # TypeORM entities (centralized)
+├── domains/           # Functional domains
+│   ├── auth/          # Authentication & authorization
+│   ├── user/          # User management
+│   ├── accommodation/ # Accommodation management
+│   └── favorites/     # User favorites
+├── core/              # Infrastructure modules
+│   ├── security/      # Security configuration
+│   └── throttling/    # Rate limiting
+├── migrations/        # Database migrations
+├── config/            # Configuration files
+└── main.ts            # Application entry point
+```
+
+### Architecture Components
+- **Modules** : NestJS modular architecture organized by domains
+- **Entities** : TypeORM models with relationships (centralized in `entities/`)
 - **Services** : Centralized business logic
 - **Controllers** : HTTP request handling
 - **Guards** : Route protection by authentication
 - **Decorators** : User information extraction
+- **Migrations** : Database schema versioning
 
 ## 🗄️ Database Migrations
 
+The application uses **TypeORM migrations** for all database schema changes. The `synchronize` option is disabled in both development and production environments.
+
 ### Main Commands
 ```bash
-# Generate a migration
-npm run migration:generate -- -n MigrationName
+# Generate a migration (from entity changes)
+npm run migration:generate -- src/migrations/MigrationName
 
-# Run migrations
+# Run migrations (development)
 npm run migration:run
+
+# Run migrations (production)
+npm run migration:run:prod
 
 # Revert last migration
 npm run migration:revert
 
-# View status
+# View migration status
 npm run migration:show
 ```
 
-### Conventions
+### Configuration Files
+- **`src/data-source.ts`** : TypeORM CLI configuration
+- **`src/app.module.ts`** : Application TypeORM configuration
+- **`railway.json`** : Production deployment configuration
+
+### Environment-Specific Configuration
+- **Development** : Uses individual DB variables (`DB_HOST`, `DB_PORT`, etc.)
+- **Production** : Uses `DATABASE_URL` provided by Railway
+- **Both environments** : `synchronize: false` (migrations only)
+
+### Migration Conventions
 - **Format** : `Timestamp-DescriptiveName.ts`
-- **Example** : `1703123456789-UpdateAccommodations.ts`
+- **Example** : `1757279782440-AddPetsAllowedToAccommodation.ts`
 - **Verbs** : Create, Add, Update, Remove, Drop
+- **Location** : `src/migrations/` directory
 
-### Configuration
-```env
-# Development (auto sync)
-NODE_ENV=development
-DB_SYNC=true
-
-# Production (manual migrations)
-NODE_ENV=production
-DB_SYNC=false
-```
+### Production Deployment
+Railway automatically runs migrations before starting the application using the `start:railway` script defined in `railway.json`.
 
 ---
 
