@@ -6,8 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { User } from '../users/user.entity';
-import { PasswordResetToken } from './password-reset-token.entity';
+import { User, PasswordResetToken } from '../../entities';
 
 @Module({
   imports: [

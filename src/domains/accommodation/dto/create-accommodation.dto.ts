@@ -8,7 +8,7 @@ import {
   Max,
   IsIn,
 } from 'class-validator';
-import { AccommodationType, ConnectivityType } from '../accommodation.entity';
+import { AccommodationType, ConnectivityType } from '../../../entities';
 
 export class CreateAccommodationDto {
   @IsString()

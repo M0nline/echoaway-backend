@@ -7,12 +7,12 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, UserRole } from '../users/user.entity';
+import { User, UserRole } from '../../entities';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { PasswordResetToken } from './password-reset-token.entity';
+import { PasswordResetToken } from '../../entities';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 

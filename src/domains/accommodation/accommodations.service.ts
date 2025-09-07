@@ -3,7 +3,7 @@ import {
   Accommodation,
   ConnectivityType,
   AccommodationType,
-} from './accommodation.entity';
+} from '../../entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 

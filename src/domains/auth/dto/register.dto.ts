@@ -6,7 +6,7 @@ import {
   IsEnum,
   IsEmail,
 } from 'class-validator';
-import { UserRole } from '../../users/user.entity';
+import { UserRole } from '../../../entities';
 
 export class RegisterDto {
   @IsString({ message: "L'email doit être une chaîne de caractères" })

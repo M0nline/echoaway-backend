@@ -11,13 +11,12 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AccommodationsService } from './accommodations.service';
-import { Accommodation } from './accommodation.entity';
+import { Accommodation } from '../../entities';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { UserRole } from '../users/user.entity';
+import { UserRole, User } from '../../entities';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from '../users/user.entity';
 
 @Controller('api/accommodations') // Ajout du préfixe 'api/accommodations'
 export class AccommodationsController {

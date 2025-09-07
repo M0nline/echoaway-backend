@@ -15,7 +15,7 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { User } from '../users/user.entity';
+import { User } from '../../entities';
 
 @Controller('api/auth')
 @UseGuards(ThrottlerGuard)
