@@ -23,14 +23,17 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  @Throttle({ short: { limit: 3, ttl: 60000 } }) // 3 tentatives par minute
+  @Throttle({ 'register-ip': {} }) // Utilise la config globale
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @Throttle({ short: { limit: 2, ttl: 60000 } }) // 2 tentatives par minute
+  @Throttle({ 
+    'login-user': {}, // Utilise la config globale
+    'login-ip': {}    // Utilise la config globale
+  })
   async login(@Body() loginDto: LoginDto) {
     console.log('🔍 LOGIN: Tentative de connexion pour:', loginDto.email);
     return this.authService.login(loginDto);
@@ -60,14 +63,14 @@ export class AuthController {
 
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
-  @Throttle({ default: { limit: 2, ttl: 300000 } }) // 2 tentatives par 5 minutes
+  @Throttle({ 'reset-password-ip': {} }) // Utilise la config globale
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     return this.authService.forgotPassword(forgotPasswordDto);
   }
 
   @Post('reset-password')
   @HttpCode(HttpStatus.OK)
-  @Throttle({ default: { limit: 3, ttl: 60000 } }) // 3 tentatives par minute
+  @Throttle({ 'reset-password-ip': {} }) // Utilise la config globale
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.resetPassword(resetPasswordDto);
   }
