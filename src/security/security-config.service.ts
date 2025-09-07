@@ -36,6 +36,19 @@ export class SecurityConfigService {
     console.log('🌐 SecurityConfigService: Getting CORS configuration...');
     const corsConfig = this.config.cors;
     console.log('🔧 SecurityConfigService: CORS config:', JSON.stringify(corsConfig, null, 2));
+    
+    // 🔍 ENQUÊTE: Log détaillé de la config CORS
+    console.log('🔍 ENQUÊTE CORS - Détails:', {
+      origin: corsConfig.origin,
+      methods: corsConfig.methods,
+      allowedHeaders: corsConfig.allowedHeaders,
+      credentials: corsConfig.credentials,
+      preflightContinue: corsConfig.preflightContinue,
+      optionsSuccessStatus: corsConfig.optionsSuccessStatus,
+      isProduction: this.isProduction(),
+      frontendUrl: this.configService.get('FRONTEND_URL')
+    });
+    
     return corsConfig;
   }
 

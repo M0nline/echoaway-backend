@@ -42,9 +42,9 @@ COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
 # Switch to non-root user
 USER nestjs
 
-# Health check - Use PORT env var or default to 3001
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "const port = process.env.PORT || 3001; require('http').get(\`http://localhost:\${port}/status\`, (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+# Health check temporarily disabled for debugging
+# HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+#   CMD node -e "const port = process.env.PORT || 3001; require('http').get(\`http://localhost:\${port}/status\`, (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 EXPOSE 3001
 

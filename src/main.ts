@@ -37,6 +37,32 @@ async function bootstrap() {
     app.enableCors(corsConfig);
     console.log('✅ Security configurations applied successfully');
 
+    // 🔍 ENQUÊTE: Middleware de logging pour toutes les requêtes
+    app.use((req, res, next) => {
+      console.log('🔍 INCOMING REQUEST:', {
+        method: req.method,
+        url: req.url,
+        origin: req.headers.origin,
+        userAgent: req.headers['user-agent'],
+        headers: req.headers,
+        timestamp: new Date().toISOString()
+      });
+      next();
+    });
+
+    // 🔍 ENQUÊTE: Middleware spécifique pour les requêtes OPTIONS (preflight)
+    app.use((req, res, next) => {
+      if (req.method === 'OPTIONS') {
+        console.log('🔍 PREFLIGHT REQUEST DETECTED:', {
+          url: req.url,
+          origin: req.headers.origin,
+          accessControlRequestMethod: req.headers['access-control-request-method'],
+          accessControlRequestHeaders: req.headers['access-control-request-headers']
+        });
+      }
+      next();
+    });
+
     console.log('✅ Configuration de sécurité appliquée:', {
       helmet: 'configuré',
       cors: 'configuré',
