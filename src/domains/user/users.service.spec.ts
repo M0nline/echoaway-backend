@@ -116,7 +116,9 @@ describe('UsersService', () => {
 
       // Assert
       expect(result).toEqual(mockUser);
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { id: userId } });
+      expect(repository.findOne).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
       expect(repository.findOne).toHaveBeenCalledTimes(1);
     });
 
@@ -130,7 +132,9 @@ describe('UsersService', () => {
 
       // Assert
       expect(result).toBeNull();
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { id: userId } });
+      expect(repository.findOne).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
       expect(repository.findOne).toHaveBeenCalledTimes(1);
     });
   });
@@ -176,9 +180,9 @@ describe('UsersService', () => {
         role: UserRole.GUEST,
       };
       const hashedPassword = 'hashedPassword123';
-      const createdUser = { 
-        ...mockUser, 
-        ...userData, 
+      const createdUser = {
+        ...mockUser,
+        ...userData,
         password: hashedPassword,
         isAdmin: jest.fn(() => false),
         isHost: jest.fn(() => false),
@@ -213,10 +217,10 @@ describe('UsersService', () => {
         name: 'Smith',
       };
       const hashedPassword = 'hashedPassword123';
-      const createdUser = { 
-        ...mockUser, 
-        ...userData, 
-        password: hashedPassword, 
+      const createdUser = {
+        ...mockUser,
+        ...userData,
+        password: hashedPassword,
         role: UserRole.VISITOR,
         isAdmin: jest.fn(() => false),
         isHost: jest.fn(() => false),
@@ -246,8 +250,8 @@ describe('UsersService', () => {
       // Arrange
       const userId = 1;
       const updateData = { firstname: 'UpdatedName' };
-      const updatedUser = { 
-        ...mockUser, 
+      const updatedUser = {
+        ...mockUser,
         ...updateData,
         isAdmin: jest.fn(() => false),
         isHost: jest.fn(() => false),
@@ -263,7 +267,9 @@ describe('UsersService', () => {
 
       // Assert
       expect(repository.update).toHaveBeenCalledWith(userId, updateData);
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { id: userId } });
+      expect(repository.findOne).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
       expect(result).toEqual(updatedUser);
     });
 
@@ -280,7 +286,9 @@ describe('UsersService', () => {
 
       // Assert
       expect(repository.update).toHaveBeenCalledWith(userId, updateData);
-      expect(repository.findOne).toHaveBeenCalledWith({ where: { id: userId } });
+      expect(repository.findOne).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
       expect(result).toBeNull();
     });
   });
@@ -308,10 +316,16 @@ describe('UsersService', () => {
       mockedBcrypt.compare.mockResolvedValue(true as never);
 
       // Act
-      const result = await service.validatePassword(plainPassword, hashedPassword);
+      const result = await service.validatePassword(
+        plainPassword,
+        hashedPassword,
+      );
 
       // Assert
-      expect(mockedBcrypt.compare).toHaveBeenCalledWith(plainPassword, hashedPassword);
+      expect(mockedBcrypt.compare).toHaveBeenCalledWith(
+        plainPassword,
+        hashedPassword,
+      );
       expect(result).toBe(true);
     });
 
@@ -322,10 +336,16 @@ describe('UsersService', () => {
       mockedBcrypt.compare.mockResolvedValue(false as never);
 
       // Act
-      const result = await service.validatePassword(plainPassword, hashedPassword);
+      const result = await service.validatePassword(
+        plainPassword,
+        hashedPassword,
+      );
 
       // Assert
-      expect(mockedBcrypt.compare).toHaveBeenCalledWith(plainPassword, hashedPassword);
+      expect(mockedBcrypt.compare).toHaveBeenCalledWith(
+        plainPassword,
+        hashedPassword,
+      );
       expect(result).toBe(false);
     });
   });
