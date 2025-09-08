@@ -6,9 +6,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: echoaway
-      POSTGRES_PASSWORD: echoaway
-      POSTGRES_DB: echoaway
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
@@ -36,15 +36,17 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - NODE_ENV=development
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=echoaway
-      - DB_PASSWORD=echoaway
-      - DB_NAME=echoaway
-      - DB_SSL=false
-      - FRONTEND_URL=http://localhost:3000
-      - PORT=3001
+      - NODE_ENV=${NODE_ENV}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_SSL=${DB_SSL}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - PORT=${PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
     depends_on:
       db:
         condition: service_healthy
