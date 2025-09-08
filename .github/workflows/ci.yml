@@ -46,17 +46,30 @@ jobs:
       - name: Run linting
         run: npm run lint:check
 
+      - name: Run unit tests
+        run: npm test
+        env:
+          NODE_ENV: test
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_SSL: false
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRES_IN: 1h
+
       - name: Build application
         run: npm run build
         env:
           NODE_ENV: test
           DB_HOST: localhost
           DB_PORT: 5432
-          DB_USER: echoaway
-          DB_PASSWORD: echoaway
-          DB_NAME: echoaway_test
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
           DB_SSL: false
-          JWT_SECRET: test-secret
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_EXPIRES_IN: 1h
 
   # Job to deploy to Railway
